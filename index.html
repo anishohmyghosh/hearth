@@ -123,6 +123,14 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
 #breathBtn{border:1px solid rgba(159,198,255,.45);color:var(--cool);border-radius:999px;padding:8px 14px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;touch-action:none;user-select:none;-webkit-user-select:none}
 #breathBtn.on{background:rgba(159,198,255,.15)}
 #gQuit{position:absolute;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(22px + env(safe-area-inset-bottom,0px))}
+#gBanner{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:min(560px,calc(100vw - 32px));text-align:center;pointer-events:none;opacity:0}
+#gBanner.show{animation:ban 2.6s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes ban{0%{opacity:0;transform:translate(-50%,-40%) scale(.92)}12%{opacity:1;transform:translate(-50%,-50%) scale(1)}78%{opacity:1;transform:translate(-50%,-52%)}100%{opacity:0;transform:translate(-50%,-60%)}}
+#gBanner .b1{font-family:var(--f-d);font-size:clamp(56px,10vw,104px);line-height:.95;color:var(--gold);text-shadow:0 0 30px rgba(255,122,47,.8),0 0 60px rgba(255,90,30,.5)}
+#gBanner .b2{font-size:13px;letter-spacing:.32em;text-transform:uppercase;color:var(--ink);margin-top:6px}
+#gBanner .b3{font-family:var(--f-d);font-style:italic;font-size:clamp(20px,2.6vw,28px);color:var(--ink);margin-top:14px;text-shadow:0 2px 14px rgba(0,0,0,.8)}
+#gBanner .b4{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:8px}
+@media (prefers-reduced-motion:reduce){#gBanner.show{animation:none;opacity:1}}
 #gFloat{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .fw{position:absolute;transform:translate(-50%,-50%);font-family:var(--f-d);font-size:20px;white-space:nowrap;animation:fw 1.1s ease-out forwards}
 @keyframes fw{from{opacity:1;transform:translate(-50%,-50%)}to{opacity:0;transform:translate(-50%,-140%)}}
@@ -209,7 +217,7 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
     <div id="gScoresView" hidden style="margin-top:14px"><div class="k" style="margin-bottom:8px">high scores</div><ol class="board" id="gBoardStart"></ol><div class="boardnote">Loading the shared leaderboard&#x2026;</div></div>
   </div></div>
   <div class="ov hide" id="gPause"><div class="box"><div class="k">paused</div><h2>Breathe</h2><p>The fire waits for you.</p><div class="row"><button class="fire-btn" type="button" id="gResume">Resume</button><button class="ghost" type="button" id="gPauseEnd">End run</button></div></div></div>
-  <div class="ov hide" id="gLevelUp"><div class="box"><div class="k" id="luK">level cleared</div><h2 id="luH">Blaze</h2><p id="luP"></p><div class="row"><button class="fire-btn" type="button" id="luGo">Keep going</button></div></div></div>
+  <div id="gBanner" aria-live="polite"><div class="b1">Blaze</div><div class="b2" id="gBan2"></div><div class="b3" id="gBan3"></div><div class="b4" id="gBan4"></div></div>
   <div class="ov hide" id="gOver"><div class="box"><div class="k" id="goK">the fire went out</div><h2 id="goRank">Spark</h2><p id="goP"></p>
   <div class="stats"><div><small>Score</small><b id="goScore">0</b></div><div><small>Level</small><b id="goLevel">1</b></div><div><small>Best combo</small><b id="goCombo">0</b></div><div><small>Caught</small><b id="goCaught">0</b></div></div>
   <div class="namecard" id="gNameCard"><div class="nc-h" id="gNameH">Put your name on the board</div><form id="gNameForm" class="nameform"><input id="gNameIn" maxlength="10" placeholder="YOUR NAME" autocomplete="off" spellcheck="false" aria-label="Name for the leaderboard"><button class="fire-btn" id="gSave" type="submit">Save</button></form><div class="nc-s" id="gNameS">Up to 10 letters. Press Enter to save.</div></div>
@@ -504,7 +512,11 @@ function catchEmber(e,bx,by){
   for(let k=0;k<(d>0?14:8);k++)G.sparks.push({x:bx,y:by-20,vx:(Math.random()-.5)*220,vy:-Math.random()*260-40,life:1,c:d>0?"#ffc46b":"#7d8fa6"});
   hud();
   if(G.fire>=10)levelUp();else if(G.fire<=-10)gameOver()}
-function levelUp(){G.run=false;gSound("win");const p=P.find(x=>x.id===G.prompt);gEl("luK").textContent=`level ${G.level} cleared`;gEl("luH").textContent="Blaze";gEl("luP").textContent=`\u201c${p.aff}\u201d Next level: a little faster${G.level+1===3?", and the embers stop giving hints":G.level+1===4?", and the wind picks up":G.level+1===5?", and cold rain starts to fall (dodge it)":""}.`;gEl("gLevelUp").classList.remove("hide")}
+function levelUp(){G.run=false;G.levelling=true;gSound("win");const p=P.find(x=>x.id===G.prompt),nx=G.level+1;
+  for(let k=0;k<40;k++)G.sparks.push({x:G.px*W,y:H*.8,vx:(Math.random()-.5)*520,vy:-Math.random()*620-120,life:1.3,c:k%3?"#ffc46b":"#fff1d6"});
+  gEl("gBan2").textContent=`Level ${nx}`;gEl("gBan3").textContent=`\u201c${p.aff}\u201d`;gEl("gBan4").textContent=nx===3?"the embers stop giving hints":nx===4?"the wind picks up":nx===5?"cold rain starts to fall \u00b7 dodge it":"a little faster";
+  const b=gEl("gBanner");b.classList.remove("show");void b.offsetWidth;b.classList.add("show");
+  setTimeout(()=>{G.levelling=false;if(level!=="game")return;G.level=nx;G.fire=2;G.el=0;G.spawn=.6;G.embers=[];G.drops=[];newPrompt();hud();if(!G.paused&&gEl("gOver").classList.contains("hide"))G.run=true},2600)}
 function gameOver(banked){G.run=false;gSound(banked?"win":"out");gEl("goK").textContent=banked?"you banked the fire":"the fire went out";if(G.score>G.best){G.best=G.score;try{localStorage.setItem("hearth:best",String(Math.round(G.best)))}catch(e){}}
   const rank=RANKS[Math.min(RANKS.length-1,G.level-1)];gEl("goRank").textContent=rank;
   gEl("goScore").textContent=Math.round(G.score);gEl("goLevel").textContent=G.level;gEl("goCombo").textContent=G.bestCombo;gEl("goCaught").textContent=G.goodN;
@@ -579,14 +591,14 @@ const COUNTER="https://abacus.jasoncameron.dev/%s/anishohmyghosh-hearth/plays";
 function showPlays(v){if(typeof v!=="number")return;gEl("gPlays").textContent=v.toLocaleString()+(v===1?" fire tended":" fires tended")+" so far";gEl("gPlays").hidden=false}
 function countPlay(){try{fetch(COUNTER.replace("%s","hit")).then(r=>r.json()).then(d=>showPlays(d.value)).catch(()=>{})}catch(e){}}
 try{fetch(COUNTER.replace("%s","get")).then(r=>r.json()).then(d=>showPlays(d.value)).catch(()=>{})}catch(e){}
-function openGame(){pullBoard();level="game";show("#centre",false);show("#begin",false);show("#pair",false);show("#game",true);$("#mapBtn").classList.remove("hide");gEl("gStart").classList.remove("hide");gEl("gOver").classList.add("hide");gEl("gLevelUp").classList.add("hide");gameReset();G.run=false}
+function openGame(){pullBoard();level="game";show("#centre",false);show("#begin",false);show("#pair",false);show("#game",true);$("#mapBtn").classList.remove("hide");gEl("gStart").classList.remove("hide");gEl("gOver").classList.add("hide");gEl("gBanner").classList.remove("show");G.levelling=false;gameReset();G.run=false}
 function closeGame(){G.run=false;show("#game",false);level="map";zoomT=0;szT=0;show("#centre",true);show("#begin",true);$("#mapBtn").classList.add("hide");resetCentre()}
 gEl("playBtn").onclick=openGame;gEl("gQuit").onclick=()=>{if(G.run&&G.score>0){gameOver(true)}else closeGame()};gEl("goBack").onclick=closeGame;
 gEl("gGo").onclick=()=>{gEl("gStart").classList.add("hide");gameReset();G.run=true;countPlay()};
 gEl("goAgain").onclick=()=>{gEl("gOver").classList.add("hide");gameReset();G.run=true;countPlay()};
-gEl("luGo").onclick=()=>{gEl("gLevelUp").classList.add("hide");G.level++;G.fire=2;G.el=0;G.spawn=.5;G.embers=[];G.drops=[];newPrompt();hud();G.run=true};
-function pauseGame(){if(level!=="game"||!G.run)return;G.run=false;G.paused=true;G.breathing=false;gEl("gPause").classList.remove("hide")}
-function resumeGame(){if(!G.paused)return;G.paused=false;gEl("gPause").classList.add("hide");G.run=true}
+
+function pauseGame(){if(level!=="game"||(!G.run&&!G.levelling)||G.paused)return;G.run=false;G.paused=true;G.breathing=false;gEl("gPause").classList.remove("hide")}
+function resumeGame(){if(!G.paused)return;G.paused=false;gEl("gPause").classList.add("hide");if(!G.levelling)G.run=true}
 gEl("gResume").onclick=resumeGame;gEl("gPauseEnd").onclick=()=>{G.paused=false;gEl("gPause").classList.add("hide");if(G.score>0)gameOver(true);else closeGame()};
 document.addEventListener("visibilitychange",()=>{if(document.hidden){pauseGame();try{GA&&GA.suspend()}catch(e){}try{AC&&AC.suspend()}catch(e){}}else{try{AC&&AC.resume()}catch(e){}}});
 addEventListener("blur",pauseGame);
