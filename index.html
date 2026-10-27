@@ -4,7 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="An interactive, fire-lit map of healed masculinity with a guided meditation and a word-catching game.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>The Hearth</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Cpath d=%22M32 6c6 12 18 18 18 32a18 18 0 0 1-36 0c0-9 6-14 9-20 2 6 5 8 8 8-2-8 0-14 1-20z%22 fill=%22%23ff7a2f%22/%3E%3C/svg%3E">
+<meta name="theme-color" content="#0a0604">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;1,400&family=Karla:wght@400;500;600&display=swap">
@@ -16,13 +21,15 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;overflow:hidden;background:var(--void)}
+html,body{height:100%;margin:0;overflow:hidden;background:var(--void);overscroll-behavior:none}
+button,a,input{-webkit-tap-highlight-color:transparent}
+.ov .box,#placard,#drawer{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}
 body{background:radial-gradient(80% 80% at 50% 62%,#1c0e07 0%,#0a0604 100%) fixed}
 body{color:var(--ink);font-family:var(--f-b);font-size:15px;line-height:1.55}
 button,input{font:inherit;color:inherit}
 button{background:none;border:none;cursor:pointer;padding:0}
 :focus-visible{outline:1px solid var(--gold);outline-offset:4px}
-#cv{position:fixed;inset:0;width:100%;height:100%;display:block}
+#cv{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;-webkit-user-select:none;user-select:none}
 .ui{position:fixed;z-index:2;transition:opacity .6s ease,transform .6s ease}
 .hide{opacity:0!important;pointer-events:none!important}
 .hide *{pointer-events:none!important}
@@ -91,7 +98,7 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
 
 @media (max-width:520px){#begin .fire-btn{padding:10px 14px;font-size:11px;letter-spacing:.12em}#begin .row2{flex-wrap:nowrap}#begin{width:calc(100vw - 24px)}}
 @media (max-width:860px){
-  #pair{grid-template-columns:1fr;grid-template-rows:42vh auto;overflow-y:auto;gap:8px}
+  #pair{grid-template-columns:1fr;grid-template-rows:42vh auto;overflow-y:auto;gap:8px;pointer-events:auto;touch-action:pan-y;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
   #stageCtl{align-self:end}
   #placard{align-self:start;max-height:none}
 }
@@ -194,18 +201,19 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
       <div><span>Move</span> &nbsp;&#x2190; &#x2192; or A / D, or drag anywhere</div>
       <div><span>Read</span> &nbsp;healing words grow the fire, wounding words shrink it. Later embers all look the same, so read them.</div>
       <div><span>Prompt</span> &nbsp;words that match the theme at the top count double, both ways.</div>
-      <div><span>Breathe</span> &nbsp;hold Space (or the button) to slow time. It drains, then refills.</div>
+      <div><span>Breathe</span> &nbsp;hold Space (or the button) to slow time. It drains, then refills. P pauses.</div>
       <div><span>Win &#xb7; lose</span> &nbsp;reach +10 to blaze into the next level. At &#x2212;10 the fire goes out.</div>
     </div>
     <div class="row"><button class="fire-btn" type="button" id="gGo">Light it</button><button class="ghost" type="button" id="gScoresBtn">High scores</button><button class="ghost" type="button" id="gSnd" aria-pressed="true">Game sound on</button></div>
     <div class="plays" id="gPlays" hidden></div>
-    <div id="gScoresView" hidden style="margin-top:14px"><div class="k" style="margin-bottom:8px">high scores</div><ol class="board" id="gBoardStart"></ol><div class="boardnote">Saved in this browser.</div></div>
+    <div id="gScoresView" hidden style="margin-top:14px"><div class="k" style="margin-bottom:8px">high scores</div><ol class="board" id="gBoardStart"></ol><div class="boardnote">Loading the shared leaderboard&#x2026;</div></div>
   </div></div>
+  <div class="ov hide" id="gPause"><div class="box"><div class="k">paused</div><h2>Breathe</h2><p>The fire waits for you.</p><div class="row"><button class="fire-btn" type="button" id="gResume">Resume</button><button class="ghost" type="button" id="gPauseEnd">End run</button></div></div></div>
   <div class="ov hide" id="gLevelUp"><div class="box"><div class="k" id="luK">level cleared</div><h2 id="luH">Blaze</h2><p id="luP"></p><div class="row"><button class="fire-btn" type="button" id="luGo">Keep going</button></div></div></div>
   <div class="ov hide" id="gOver"><div class="box"><div class="k" id="goK">the fire went out</div><h2 id="goRank">Spark</h2><p id="goP"></p>
   <div class="stats"><div><small>Score</small><b id="goScore">0</b></div><div><small>Level</small><b id="goLevel">1</b></div><div><small>Best combo</small><b id="goCombo">0</b></div><div><small>Caught</small><b id="goCaught">0</b></div></div>
   <div class="namecard" id="gNameCard"><div class="nc-h" id="gNameH">Put your name on the board</div><form id="gNameForm" class="nameform"><input id="gNameIn" maxlength="10" placeholder="YOUR NAME" autocomplete="off" spellcheck="false" aria-label="Name for the leaderboard"><button class="fire-btn" id="gSave" type="submit">Save</button></form><div class="nc-s" id="gNameS">Up to 10 letters. Press Enter to save.</div></div>
-  <div class="k" style="margin:14px 0 8px">high scores</div><ol class="board" id="gBoard"></ol><div class="boardnote">Saved in this browser.</div>
+  <div class="k" style="margin:14px 0 8px">high scores</div><ol class="board" id="gBoard"></ol><div class="boardnote">Loading the shared leaderboard&#x2026;</div>
   <div class="recap" id="goRecap"></div>
   <div class="row"><button class="fire-btn" type="button" id="goAgain">Rekindle</button><button class="ghost" type="button" id="goBack">Back to the Hearth</button></div></div></div>
 </section>
@@ -300,11 +308,11 @@ const BREATH=11;
 
 /* ===== canvas ===== */
 const cv=document.getElementById("cv"),g=cv.getContext("2d");
-let W=0,H=0,DPR=1,T=0,last=performance.now(),DPRMAX=Math.min(1.75,devicePixelRatio||1),ema=1/60,slowFor=0;
+let W=0,H=0,DPR=1,T=0,last=performance.now(),DPRMAX=Math.min(matchMedia("(pointer: coarse)").matches?1.5:1.75,devicePixelRatio||1),ema=1/60,slowFor=0;
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 function placeCentre(){const R=Math.min(innerWidth*.38,(innerHeight-260)*.44),c=document.getElementById('centre');if(c){c.style.top=(innerHeight/2-24+Math.min(R*.16,56)*.9+14)+'px'}}
 function resize(){DPR=DPRMAX;W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR}
-addEventListener("resize",()=>{resize();measure()});resize();
+addEventListener("resize",()=>{resize();measure();if(typeof G!=="undefined")G.top0=0});resize();
 const GLOW=(()=>{const c=document.createElement("canvas");c.width=c.height=256;const x=c.getContext("2d"),gr=x.createRadialGradient(128,128,0,128,128,128);gr.addColorStop(0,"rgba(255,150,70,1)");gr.addColorStop(.35,"rgba(255,110,45,.45)");gr.addColorStop(1,"rgba(255,90,30,0)");x.fillStyle=gr;x.fillRect(0,0,256,256);return c})();
 const TAU=Math.PI*2,ss=x=>{x=Math.max(0,Math.min(1,x));return x*x*(3-2*x)},lerp=(a,b,u)=>a+(b-a)*u,cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
 const hsh=i=>{const x=Math.sin(i*12.9898+78.233)*43758.5453;return x-Math.floor(x)};
@@ -359,6 +367,7 @@ function nodes(){const{cx,cy,R,Ry}=ringGeom();return P.map((_,i)=>{const a=-Math
 
 let DT=1/60;
 function frame(now){
+  if(now-last<15.5){requestAnimationFrame(frame);return} /* cap at ~60fps on 120Hz screens */
   const raw=(now-last)/1000;DT=Math.min(.05,raw)*(reduce?.4:1);last=now;T+=DT;
   if(raw<.5){ema+=(raw-ema)*.05;if(ema>1/42){slowFor+=raw;if(slowFor>1.5&&DPRMAX>1){DPRMAX=Math.max(1,DPRMAX-.25);resize();slowFor=0;ema=1/60}}else slowFor=0}
   zoom+=(zoomT-zoom)*Math.min(1,DT*3.4);sz+=(szT-sz)*Math.min(1,DT*2.2);
@@ -470,15 +479,15 @@ const G={on:false,run:false,fire:0,score:0,level:1,combo:0,best:0,px:.5,vx:0,emb
 try{G.best=+localStorage.getItem("hearth:best")||0}catch(e){}
 const gEl=id=>document.getElementById(id);
 function lvl(){const n=G.level,r=Math.min(1,(G.el||0)/120);return{fall:66+10*(n-1)+34*r,every:Math.max(.7,1.65-.15*(n-1)-.6*r),maxOn:Math.min(8,4+Math.floor((n-1)*.8+r*2)),plen:Math.max(9,30-3*(n-1)-10*r),hint:n<=2?1-(n-1)*.5:0,wind:n>=4,rain:n>=5}}
-function setPrompt(t){G.prompt=t;G.ptime=0;G.plen=lvl().plen;const p=P.find(x=>x.id===t);const el=gEl("gPrompt");el.classList.add("flip");setTimeout(()=>{el.textContent=p.to;gEl("gSub").innerHTML=`${p.from} \u2192 ${p.to}<span class="long"> \u00b7 matching words count double</span>`;el.classList.remove("flip")},300)}
+function setPrompt(t){G.prompt=t;G.ptime=0;G.top0=0;G.plen=lvl().plen;const p=P.find(x=>x.id===t);const el=gEl("gPrompt");el.classList.add("flip");setTimeout(()=>{el.textContent=p.to;gEl("gSub").innerHTML=`${p.from} \u2192 ${p.to}<span class="long"> \u00b7 matching words count double</span>`;el.classList.remove("flip")},300)}
 function newPrompt(){let t;do{t=THEMES[(Math.random()*THEMES.length)|0]}while(t===G.prompt&&THEMES.length>1);setPrompt(t)}
 function spawnEmber(){const L=lvl(),theme=Math.random()<.45?G.prompt:THEMES[(Math.random()*THEMES.length)|0],good=Math.random()<.55,onScreen=new Set(G.embers.map(e=>e.w)),pool=WORDS[theme][good?"good":"bad"],list=pool.filter(w=>!onScreen.has(w)).length?pool.filter(w=>!onScreen.has(w)):pool,gold=Math.random()<.035;
-  const top0=(gEl("gTop").getBoundingClientRect().bottom+18)/H;G.embers.push({age:0,x:.1+Math.random()*.8,y:top0,v:L.fall*(.8+Math.random()*.45),w:gold?"hearthstone":list[(Math.random()*list.length)|0],good:gold||good,theme,gold,ph:Math.random()*TAU,i:list.indexOf(list[0])})}
+  if(!G.top0)G.top0=(gEl("gTop").getBoundingClientRect().bottom+18)/H;const top0=G.top0;G.embers.push({age:0,x:.1+Math.random()*.8,y:top0,v:L.fall*(.8+Math.random()*.45),w:gold?"hearthstone":list[(Math.random()*list.length)|0],good:gold||good,theme,gold,ph:Math.random()*TAU,i:list.indexOf(list[0])})}
 function gameReset(){Object.assign(G,{goodN:0,badN:0,bestCombo:0,el:0,fire:0,score:0,level:1,combo:0,embers:[],drops:[],sparks:[],spawn:.4,breath:1,wind:0,windT:0,caughtBad:[],shake:0,px:.5});newPrompt();hud()}
 function hud(){gEl("gScore").textContent=Math.round(G.score);gEl("gLevel").textContent=G.level;gEl("gCombo").textContent="\u00d7"+(1+Math.floor(G.combo/4));gEl("gBest").textContent=Math.round(G.best);gEl("gFill").style.height=`calc(${(G.fire+10)/20*100}% - 4px)`}
 function floatWord(txt,x,y,col){const d=document.createElement("div");d.className="fw";d.textContent=txt;d.style.left=x+"px";d.style.top=y+"px";d.style.color=col;gEl("gFloat").appendChild(d);setTimeout(()=>d.remove(),1150)}
 /* sound */
-let GA=null;function gSound(type,k=0){if(!G.sound)return;try{GA=GA||new (window.AudioContext||window.webkitAudioContext)();const t=GA.currentTime,o=GA.createOscillator(),gg=GA.createGain();o.connect(gg);gg.connect(GA.destination);
+let GA=null;function gSound(type,k=0){if(!G.sound)return;try{GA=GA||new (window.AudioContext||window.webkitAudioContext)();if(GA.state==='suspended')GA.resume();const t=GA.currentTime,o=GA.createOscillator(),gg=GA.createGain();o.connect(gg);gg.connect(GA.destination);
   if(type==="good"){const scale=[0,2,4,7,9,12,14,16,19,21];o.type="triangle";o.frequency.value=330*Math.pow(2,scale[Math.min(k,9)]/12);gg.gain.setValueAtTime(.0001,t);gg.gain.exponentialRampToValueAtTime(.18,t+.01);gg.gain.exponentialRampToValueAtTime(.0001,t+.45);o.start(t);o.stop(t+.5)}
   else if(type==="bad"){o.type="sawtooth";o.frequency.setValueAtTime(140,t);o.frequency.exponentialRampToValueAtTime(55,t+.35);const f=GA.createBiquadFilter();f.type="lowpass";f.frequency.value=500;o.disconnect();o.connect(f);f.connect(gg);gg.gain.setValueAtTime(.16,t);gg.gain.exponentialRampToValueAtTime(.0001,t+.4);o.start(t);o.stop(t+.45)}
   else if(type==="win"){[0,4,7,12].forEach((s,i)=>{const oo=GA.createOscillator(),g2=GA.createGain();oo.type="triangle";oo.frequency.value=262*Math.pow(2,s/12);oo.connect(g2);g2.connect(GA.destination);g2.gain.setValueAtTime(.0001,t+i*.12);g2.gain.exponentialRampToValueAtTime(.16,t+i*.12+.02);g2.gain.exponentialRampToValueAtTime(.0001,t+i*.12+.6);oo.start(t+i*.12);oo.stop(t+i*.12+.65)})}
@@ -501,7 +510,7 @@ function gameOver(banked){G.run=false;gSound(banked?"win":"out");gEl("goK").text
   gEl("goScore").textContent=Math.round(G.score);gEl("goLevel").textContent=G.level;gEl("goCombo").textContent=G.bestCombo;gEl("goCaught").textContent=G.goodN;
   gEl("goP").textContent=(G.score>=G.best&&G.score>0?"New best. ":"")+"Every hearth has nights like this, and every fire can be rekindled.";
   lastEntry=null;const ok=G.score>0;gEl("gNameIn").disabled=!ok;gEl("gSave").disabled=!ok;gEl("gNameIn").value="";gEl("gNameForm").hidden=!ok;
-  const place=board.filter(r=>r.score>Math.round(G.score)).length+1;gEl("gNameH").textContent=ok?(place<=10?`#${place} on the board. Put your name on it`:"Put your name on the board"):"No points this time";gEl("gNameS").textContent=ok?"Up to 10 letters. Press Enter to save.":"Catch a few healing words to make the board.";
+  pullBoard();const place=allScores().filter(r=>r.score>Math.round(G.score)).length+1;gEl("gNameH").textContent=ok?(place<=10?`#${place} on the board. Put your name on it`:"Put your name on the board"):"No points this time";gEl("gNameS").textContent=ok?"Up to 10 letters. Press Enter to save.":"Catch a few healing words to make the board.";
   renderBoard(gEl("gBoard"));gEl("gOver").querySelector(".box").scrollTop=0;setTimeout(()=>{if(ok)gEl("gNameIn").focus()},350);
   const seen=new Set(),rows=G.caughtBad.filter(e=>!seen.has(e.w)&&seen.add(e.w)).slice(-8).map(e=>{const k=WORDS[e.theme].bad.indexOf(e.w),h=WORDS[e.theme].good[k]||WORDS[e.theme].good[0];return`<div><span class="w">${e.w}</span><span style="color:var(--dim)">\u2192</span><span class="h">${h}</span></div>`});
   gEl("goRecap").innerHTML=rows.length?`<div class="k" style="margin-bottom:4px">what smothered it, and what heals it</div>${rows.join("")}`:"";gEl("gOver").classList.remove("hide");hud()}
@@ -510,9 +519,9 @@ function gameFrame(){
   // input
   const dir=(G.keys.ArrowRight||G.keys.d?1:0)-(G.keys.ArrowLeft||G.keys.a?1:0);if(dir)G.px=cl(G.px+dir*DT*.95,.04,.96);
   G.breathing=G.breathing&&G.breath>0;if(G.breathing)G.breath=Math.max(0,G.breath-DT/3);else G.breath=Math.min(1,G.breath+DT/7);
-  gEl("gBreathBar").style.width=(G.breath*100)+"%";gEl("breathBtn").classList.toggle("on",G.breathing);
+  const bb=Math.round(G.breath*100);if(bb!==G._bb){G._bb=bb;gEl("gBreathBar").style.width=bb+"%"}if(G.breathing!==G._bo){G._bo=G.breathing;gEl("breathBtn").classList.toggle("on",G.breathing)}
   const ts=G.run?(G.breathing?.38:1):0,dt=DT*ts;
-  if(G.run){G.ptime+=dt;gEl("gPbar").style.width=Math.max(0,100-G.ptime/G.plen*100)+"%";if(G.ptime>G.plen)newPrompt();
+  if(G.run){G.ptime+=dt;{const pb=Math.round(Math.max(0,100-G.ptime/G.plen*100));if(pb!==G._pb){G._pb=pb;gEl("gPbar").style.width=pb+"%"}}if(G.ptime>G.plen)newPrompt();
     G.el=(G.el||0)+dt;G.spawn-=dt;if(G.spawn<=0){if(G.embers.length<L.maxOn)spawnEmber();G.spawn=L.every*(.8+Math.random()*.4)}
     if(L.wind){G.windT-=dt;if(G.windT<=0){G.wind=(Math.random()-.5)*.5;G.windT=3+Math.random()*4}}else G.wind=0;
     if(L.rain&&Math.random()<dt*(.15+(G.level-5)*.05+.1*Math.min(1,G.el/120)))G.drops.push({x:Math.random(),y:-.02,v:H*.55})}
@@ -520,11 +529,12 @@ function gameFrame(){
   const f01=(G.fire+10)/20,px=G.px*W;
   g.save();g.globalAlpha=.25+.5*f01;const gr=Math.max(W,H)*.45*(.4+.8*f01);g.drawImage(GLOW,px-gr,by-gr*.8,gr*2,gr*2);g.restore();
   // embers
+  if(G._hint!==L.hint){G._hint=L.hint;G._cg=mixCol("#ff8a3a","#ffc46b",L.hint*.9);G._cb=mixCol("#ff8a3a","#b9774f",L.hint*.9)}const cGood=G._cg,cBad=G._cb;
   g.save();g.textAlign="center";g.textBaseline="middle";
   for(let i=G.embers.length-1;i>=0;i--){const e=G.embers[i];e.y+=e.v*dt/H;e.age=(e.age||0)+dt;const fade=Math.min(1,e.age/.6);e.x=cl(e.x+G.wind*dt*.12,.03,.97);const x=e.x*W+Math.sin(T*2+e.ph)*6,y=e.y*H;
     if(y>by-14&&y<by+18&&Math.abs(x-px)<bw/2){G.embers.splice(i,1);if(G.run)catchEmber(e,x,by);continue}
     if(y>H+20){if(e.good&&!e.gold)G.combo=0,hud();G.embers.splice(i,1);continue}
-    const hint=L.hint,warm=e.good?1:0,col=e.gold?"#fff1b8":mixCol("#ff8a3a",warm?"#ffc46b":"#b9774f",hint*.9);
+    const col=e.gold?"#fff1b8":(e.good?cGood:cBad);
     g.globalCompositeOperation="lighter";g.globalAlpha=.9*fade;const r=e.gold?11:8;g.drawImage(GLOW,x-r*3,y-r*3,r*6,r*6);g.fillStyle=col;g.beginPath();g.arc(x,y,r*.55,0,TAU);g.fill();
     g.globalCompositeOperation="source-over";g.globalAlpha=fade;g.font=`500 ${innerWidth<640?15:18}px Cormorant, Georgia, serif`;g.fillStyle=e.gold?"#fff1b8":"#f6ede4";g.fillText(e.w,x,y-r-12)}
   // rain
@@ -543,26 +553,45 @@ function gameFrame(){
 }
 const RANKS=["Spark","Kindler","Ember Tender","Firekeeper","Hearthwarden","Flamebearer","Keeper of the Hearth"];
 let board=[],lastEntry=null;try{board=JSON.parse(localStorage.getItem("hearth:board")||"[]")}catch(e){board=[]}
-function renderBoard(list){const rows=board.slice(0,10);list.innerHTML="";if(!rows.length){list.innerHTML='<li><span class="rk">\u2014</span><span class="nm">No scores yet.</span><span></span><span></span></li>';return}
-  rows.forEach((r,i)=>{const li=document.createElement("li");if(r===lastEntry)li.className="me";const a=document.createElement("span");a.className="rk";a.textContent=String(i+1).padStart(2,"0");const b=document.createElement("span");b.className="nm";b.textContent=r.name;const c=document.createElement("span");c.className="md";c.textContent=(RANKS[Math.min(RANKS.length-1,(r.level||1)-1)])+" \u00b7 LV "+(r.level||1);const d=document.createElement("span");d.className="sc";d.textContent=r.score;li.append(a,b,c,d);list.append(li)})}
+/* shared board: a public npoint.io JSON bin, read-merge-write with verify + retry; falls back to this browser */
+const BOARD_URL="https://api.npoint.io/8464bf9633db50ca28e7";let shared=null,boardMode="loading";
+const cleanBoard=l=>(Array.isArray(l)?l:[]).filter(r=>r&&typeof r.name==="string"&&Number.isFinite(+r.score)).map(r=>({name:String(r.name).toUpperCase().replace(/[^A-Z0-9 ._-]/g,"").slice(0,10)||"?",score:Math.max(0,Math.min(999999,Math.round(+r.score))),level:Math.max(1,Math.min(99,Math.round(+r.level||1))),at:Math.round(+r.at)||0}));
+const same=(a,b)=>a&&b&&a.at===b.at&&a.name===b.name&&a.score===b.score;
+function allScores(){const out=[];[...(shared||[]),...cleanBoard(board)].forEach(r=>{if(!out.some(x=>same(x,r)))out.push(r)});return out.sort((a,b)=>b.score-a.score)}
+function boardNote(){return boardMode==="shared"?"Shared leaderboard: everyone, every device.":boardMode==="loading"?"Loading the shared leaderboard\u2026":"Couldn't reach the shared leaderboard. Showing scores saved in this browser."}
+function refreshBoards(){document.querySelectorAll(".boardnote").forEach(n=>n.textContent=boardNote());if(!gEl("gOver").classList.contains("hide"))renderBoard(gEl("gBoard"));if(!gEl("gScoresView").hidden)renderBoard(gEl("gBoardStart"))}
+const getJSON=()=>fetch(BOARD_URL,{cache:"no-store"}).then(r=>{if(!r.ok)throw 0;return r.json()});
+let pulling=null;function pullBoard(){if(pulling)return pulling;pulling=getJSON().then(d=>{shared=cleanBoard(d&&d.board);boardMode="shared"}).catch(()=>{boardMode=shared?"shared":"offline"}).finally(()=>{pulling=null;refreshBoards()});return pulling}
+async function pushEntry(entry){for(let i=0;i<3;i++){try{const d=await getJSON();let l=cleanBoard(d&&d.board);if(!l.some(x=>same(x,entry)))l.push(entry);l.sort((a,b)=>b.score-a.score);l=l.slice(0,100);
+  const r=await fetch(BOARD_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({board:l})});if(!r.ok)throw 0;
+  const v=cleanBoard((await getJSON()).board);if(v.some(x=>same(x,entry))||(v.length>=100&&entry.score<=v[v.length-1].score)){shared=v;boardMode="shared";refreshBoards();return true}}catch(e){}
+  await new Promise(r=>setTimeout(r,500+Math.random()*700))}boardMode="offline";refreshBoards();return false}
+function renderBoard(list){const rows=allScores().slice(0,10);list.innerHTML="";if(!rows.length){list.innerHTML='<li><span class="rk">\u2014</span><span class="nm">No scores yet.</span><span></span><span></span></li>';return}
+  rows.forEach((r,i)=>{const li=document.createElement("li");if(same(r,lastEntry))li.className="me";const a=document.createElement("span");a.className="rk";a.textContent=String(i+1).padStart(2,"0");const b=document.createElement("span");b.className="nm";b.textContent=r.name;const c=document.createElement("span");c.className="md";c.textContent=(RANKS[Math.min(RANKS.length-1,(r.level||1)-1)])+" \u00b7 LV "+(r.level||1);const d=document.createElement("span");d.className="sc";d.textContent=r.score;li.append(a,b,c,d);list.append(li)})}
 gEl("gNameIn").addEventListener("input",e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9 ._-]/g,"")});
 gEl("gNameIn").addEventListener("keydown",e=>e.stopPropagation());
 gEl("gNameForm").addEventListener("submit",e=>{e.preventDefault();if(G.score<=0)return;const name=(gEl("gNameIn").value.trim()||"FIREKEEPER").slice(0,10);gEl("gSave").disabled=true;gEl("gNameIn").disabled=true;gEl("gNameIn").blur();gEl("gNameH").textContent="Saved. Your name is on the board";gEl("gNameS").textContent="";
-  const entry={name,score:Math.round(G.score),level:G.level,at:Date.now()};lastEntry=entry;board.push(entry);board.sort((a,b)=>b.score-a.score);board=board.slice(0,25);try{localStorage.setItem("hearth:board",JSON.stringify(board))}catch(err){}renderBoard(gEl("gBoard"))});
-gEl("gScoresBtn").onclick=()=>{const v=gEl("gScoresView");v.hidden=!v.hidden;if(!v.hidden)renderBoard(gEl("gBoardStart"))};
+  const entry={name,score:Math.round(G.score),level:G.level,at:Date.now()};lastEntry=entry;board.push(entry);board.sort((a,b)=>b.score-a.score);board=board.slice(0,25);try{localStorage.setItem("hearth:board",JSON.stringify(board))}catch(err){}renderBoard(gEl("gBoard"));gEl("gNameS").textContent="Sending to the shared board\u2026";pushEntry(entry).then(ok=>{gEl("gNameS").textContent=ok?"On the shared board for every device.":"Saved here. The shared board couldn't be reached, so it's only in this browser for now."})});
+gEl("gScoresBtn").onclick=()=>{const v=gEl("gScoresView");v.hidden=!v.hidden;if(!v.hidden){renderBoard(gEl("gBoardStart"));pullBoard()}};
 /* play counter (abacus.jasoncameron.dev, free and keyless); silently absent where blocked */
 const COUNTER="https://abacus.jasoncameron.dev/%s/anishohmyghosh-hearth/plays";
 function showPlays(v){if(typeof v!=="number")return;gEl("gPlays").textContent=v.toLocaleString()+(v===1?" fire tended":" fires tended")+" so far";gEl("gPlays").hidden=false}
 function countPlay(){try{fetch(COUNTER.replace("%s","hit")).then(r=>r.json()).then(d=>showPlays(d.value)).catch(()=>{})}catch(e){}}
 try{fetch(COUNTER.replace("%s","get")).then(r=>r.json()).then(d=>showPlays(d.value)).catch(()=>{})}catch(e){}
-function openGame(){level="game";show("#centre",false);show("#begin",false);show("#pair",false);show("#game",true);$("#mapBtn").classList.remove("hide");gEl("gStart").classList.remove("hide");gEl("gOver").classList.add("hide");gEl("gLevelUp").classList.add("hide");gameReset();G.run=false}
+function openGame(){pullBoard();level="game";show("#centre",false);show("#begin",false);show("#pair",false);show("#game",true);$("#mapBtn").classList.remove("hide");gEl("gStart").classList.remove("hide");gEl("gOver").classList.add("hide");gEl("gLevelUp").classList.add("hide");gameReset();G.run=false}
 function closeGame(){G.run=false;show("#game",false);level="map";zoomT=0;szT=0;show("#centre",true);show("#begin",true);$("#mapBtn").classList.add("hide");resetCentre()}
 gEl("playBtn").onclick=openGame;gEl("gQuit").onclick=()=>{if(G.run&&G.score>0){gameOver(true)}else closeGame()};gEl("goBack").onclick=closeGame;
 gEl("gGo").onclick=()=>{gEl("gStart").classList.add("hide");gameReset();G.run=true;countPlay()};
 gEl("goAgain").onclick=()=>{gEl("gOver").classList.add("hide");gameReset();G.run=true;countPlay()};
 gEl("luGo").onclick=()=>{gEl("gLevelUp").classList.add("hide");G.level++;G.fire=2;G.el=0;G.spawn=.5;G.embers=[];G.drops=[];newPrompt();hud();G.run=true};
+function pauseGame(){if(level!=="game"||!G.run)return;G.run=false;G.paused=true;G.breathing=false;gEl("gPause").classList.remove("hide")}
+function resumeGame(){if(!G.paused)return;G.paused=false;gEl("gPause").classList.add("hide");G.run=true}
+gEl("gResume").onclick=resumeGame;gEl("gPauseEnd").onclick=()=>{G.paused=false;gEl("gPause").classList.add("hide");if(G.score>0)gameOver(true);else closeGame()};
+document.addEventListener("visibilitychange",()=>{if(document.hidden){pauseGame();try{GA&&GA.suspend()}catch(e){}try{AC&&AC.suspend()}catch(e){}}else{try{AC&&AC.resume()}catch(e){}}});
+addEventListener("blur",pauseGame);
+gEl("breathBtn").addEventListener("contextmenu",e=>e.preventDefault());cv.addEventListener("contextmenu",e=>{if(level==="game")e.preventDefault()});
 gEl("gSnd").onclick=()=>{G.sound=!G.sound;gEl("gSnd").setAttribute("aria-pressed",G.sound);gEl("gSnd").textContent=G.sound?"Game sound on":"Game sound off"};
-addEventListener("keydown",e=>{if(level!=="game"||e.target.tagName==="INPUT")return;const k=e.key.length===1?e.key.toLowerCase():e.key;G.keys[k]=true;if(e.key===" "){e.preventDefault();G.breathing=true}if(["ArrowLeft","ArrowRight"].includes(e.key))e.preventDefault()});
+addEventListener("keydown",e=>{if(level!=="game"||e.target.tagName==="INPUT")return;if(e.key==="p"||e.key==="P"){G.paused?resumeGame():pauseGame();return}const k=e.key.length===1?e.key.toLowerCase():e.key;G.keys[k]=true;if(e.key===" "){e.preventDefault();G.breathing=true}if(["ArrowLeft","ArrowRight"].includes(e.key))e.preventDefault()});
 addEventListener("keyup",e=>{const k=e.key.length===1?e.key.toLowerCase():e.key;G.keys[k]=false;if(e.key===" ")G.breathing=false});
 const bb=gEl("breathBtn");bb.addEventListener("pointerdown",e=>{e.preventDefault();G.breathing=true});["pointerup","pointerleave","pointercancel"].forEach(t=>bb.addEventListener(t,()=>G.breathing=false));
 cv.addEventListener("pointerdown",e=>{if(level==="game"){G.drag=true;G.px=cl(e.clientX/W,.04,.96)}});
