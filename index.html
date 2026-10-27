@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="An interactive, fire-lit map of healed masculinity with a guided breathing session.">
+<meta name="description" content="An interactive, fire-lit map of healed masculinity with a guided breathing session and a word-catching game.">
 <title>The Hearth</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -92,6 +92,44 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
   #placard{align-self:start;max-height:none}
 }
 @media (prefers-reduced-motion:reduce){.ui{transition:opacity .2s!important;transform:none}}
+/* game */
+#game{inset:0;pointer-events:none}
+#game>*{pointer-events:auto}
+#gTop{position:absolute;top:calc(56px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);width:min(560px,calc(100vw - 32px));text-align:center;pointer-events:none}
+#gPrompt{font-family:var(--f-d);font-size:clamp(26px,3.4vw,40px);line-height:1.05;color:var(--gold);transition:opacity .4s,transform .4s}
+#gPrompt.flip{opacity:0;transform:translateY(-6px)}
+#gSub{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-top:4px}
+#gPtime{height:2px;margin:10px auto 0;width:60%;background:var(--faint);border-radius:2px;overflow:hidden}
+#gPtime i{display:block;height:100%;background:var(--gold);width:100%}
+#gHud{position:absolute;top:calc(56px + env(safe-area-inset-top,0px));left:max(18px,env(safe-area-inset-left,0px));display:grid;gap:4px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);pointer-events:none}
+#gHud b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.04em;font-size:15px}
+#gMeter{position:absolute;right:max(18px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);width:14px;height:min(46vh,340px);border-radius:10px;border:1px solid rgba(255,196,107,.3);background:rgba(255,255,255,.03);pointer-events:none}
+#gMeter i{position:absolute;left:2px;right:2px;bottom:2px;border-radius:8px;background:linear-gradient(0deg,#6b2a14,#ff7a2f 55%,#ffd27a);transition:height .35s cubic-bezier(.2,.8,.2,1)}
+#gMeter span{position:absolute;right:20px;font-size:10px;letter-spacing:.14em;color:var(--dim);white-space:nowrap;transform:translateY(-50%)}
+#gBreath{position:absolute;left:max(18px,env(safe-area-inset-left,0px));bottom:calc(22px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:10px}
+#gBreath .bar{width:110px;height:4px;border-radius:4px;background:var(--faint);overflow:hidden}
+#gBreath .bar i{display:block;height:100%;background:var(--cool);width:100%}
+#breathBtn{border:1px solid rgba(159,198,255,.45);color:var(--cool);border-radius:999px;padding:8px 14px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;touch-action:none;user-select:none;-webkit-user-select:none}
+#breathBtn.on{background:rgba(159,198,255,.15)}
+#gQuit{position:absolute;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(22px + env(safe-area-inset-bottom,0px))}
+#gFloat{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.fw{position:absolute;transform:translate(-50%,-50%);font-family:var(--f-d);font-size:20px;white-space:nowrap;animation:fw 1.1s ease-out forwards}
+@keyframes fw{from{opacity:1;transform:translate(-50%,-50%)}to{opacity:0;transform:translate(-50%,-140%)}}
+.ov{position:absolute;inset:0;display:grid;place-items:center;background:rgba(10,6,4,.72);backdrop-filter:blur(4px);padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.ov .box{width:min(560px,100%);max-height:86vh;overflow-y:auto;text-align:center;padding:26px 24px;border:1px solid rgba(255,196,107,.22);border-radius:20px;background:rgba(18,10,6,.9)}
+.ov h2{font-size:clamp(34px,4vw,52px);line-height:1;margin:6px 0 10px}
+.ov p{margin:0 auto 10px;max-width:46ch;color:var(--ink)}
+.ov .rules{text-align:left;display:grid;gap:6px;margin:14px 0;font-size:14px}
+.ov .rules span{color:var(--gold)}
+.ov .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.recap{text-align:left;font-size:14px;display:grid;gap:4px;margin:12px 0}
+.recap div{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.recap .w{color:#ff8a5c;font-style:italic;font-family:var(--f-d);font-size:17px}
+.recap .h{color:var(--gold);font-family:var(--f-d);font-size:17px}
+#playBtn{border-color:rgba(159,198,255,.5);color:var(--cool);background:rgba(159,198,255,.06);box-shadow:none}
+#playBtn:hover{background:rgba(159,198,255,.14)}
+#begin .row2{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+@media (max-width:640px){#gMeter{height:34vh}#gHud{top:calc(48px + env(safe-area-inset-top,0px))}#gTop{top:calc(92px + env(safe-area-inset-top,0px))}}
 </style>
 
 </head>
@@ -104,7 +142,7 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
 </header>
 
 <div id="centre" class="ui"><div class="k" id="cK">healed masculinity</div><h1 id="cH">Wildfire into hearth</h1><p id="cP">Same fire, held well: it warms instead of burning. Hover a flame to read it. Click to enter.</p></div>
-<div id="begin" class="ui"><button class="fire-btn" type="button" id="startBtn">Begin the session &#xb7; 7 min</button><div class="note">A guided practice, not therapy. If something heavy comes up, talk to someone you trust or a professional.</div></div>
+<div id="begin" class="ui"><div class="row2"><button class="fire-btn" type="button" id="startBtn">Begin the session &#xb7; 7 min</button><button class="fire-btn" type="button" id="playBtn">Play &#xb7; Tend the Fire</button></div><div class="note">A guided practice, not therapy. If something heavy comes up, talk to someone you trust or a professional.</div></div>
 
 <section id="pair" class="ui hide" aria-live="polite">
   <div id="stageCtl"><div class="morph"><span>wound</span><input type="range" id="mix" min="0" max="1000" value="0" aria-label="Move from wound to healed"><span>healed</span></div><div class="k" id="mixHint">drag, or watch it heal</div></div>
@@ -115,6 +153,29 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
   <div id="sLine"></div><div id="sCue"></div>
   <div id="sProg"><i id="sBar"></i></div>
   <div id="sCtl"><button class="ghost" type="button" id="pauseBtn">Pause</button><button class="ghost" type="button" id="endBtn">End session</button></div>
+</section>
+
+<section id="game" class="ui hide" aria-label="Tend the Fire game">
+  <div id="gTop"><div id="gPrompt">Feeling</div><div id="gSub">catch what feeds it</div><div id="gPtime"><i id="gPbar"></i></div></div>
+  <div id="gHud"><div>Score <b id="gScore">0</b></div><div>Level <b id="gLevel">1</b></div><div>Combo <b id="gCombo">&#xd7;1</b></div><div>Best <b id="gBest">0</b></div></div>
+  <div id="gMeter" aria-hidden="true"><i id="gFill"></i><span style="top:2%">blaze +10</span><span style="top:50%">0</span><span style="top:98%">out &#x2212;10</span></div>
+  <div id="gFloat"></div>
+  <div id="gBreath"><button type="button" id="breathBtn">Hold &#xb7; Breathe</button><div class="bar"><i id="gBreathBar"></i></div></div>
+  <button class="ghost" type="button" id="gQuit">Leave game</button>
+  <div class="ov" id="gStart"><div class="box">
+    <div class="k">a hearth game</div><h2>Tend the Fire</h2>
+    <p>Words fall as embers. Catch the ones that feed a healthy fire; let the ones that smother it fall.</p>
+    <div class="rules">
+      <div><span>Move</span> &nbsp;&#x2190; &#x2192; or A / D, or drag anywhere</div>
+      <div><span>Read</span> &nbsp;healing words grow the fire, wounding words shrink it. Later embers all look the same, so read them.</div>
+      <div><span>Prompt</span> &nbsp;words that match the theme at the top count double, both ways.</div>
+      <div><span>Breathe</span> &nbsp;hold Space (or the button) to slow time. It drains, then refills.</div>
+      <div><span>Win &#xb7; lose</span> &nbsp;reach +10 to blaze into the next level. At &#x2212;10 the fire goes out.</div>
+    </div>
+    <div class="row"><button class="fire-btn" type="button" id="gGo">Light it</button><button class="ghost" type="button" id="gSnd" aria-pressed="true">Game sound on</button></div>
+  </div></div>
+  <div class="ov hide" id="gLevelUp"><div class="box"><div class="k" id="luK">level cleared</div><h2 id="luH">Blaze</h2><p id="luP"></p><div class="row"><button class="fire-btn" type="button" id="luGo">Keep going</button></div></div></div>
+  <div class="ov hide" id="gOver"><div class="box"><div class="k">the fire went out</div><h2 id="goH">Embers remain</h2><p id="goP"></p><div class="recap" id="goRecap"></div><div class="row"><button class="fire-btn" type="button" id="goAgain">Rekindle</button><button class="ghost" type="button" id="goBack">Back to the Hearth</button></div></div></div>
 </section>
 
 <aside id="drawer" aria-label="Sources"><button class="ghost" type="button" id="drawerX" style="float:right">Close</button><h3>Sources</h3><ol id="refList"></ol>
@@ -266,6 +327,7 @@ function frame(now){
   zoom+=(zoomT-zoom)*Math.min(1,DT*3.4);sz+=(szT-sz)*Math.min(1,DT*2.2);
   g.setTransform(DPR,0,0,DPR,0,0);g.globalAlpha=1;g.globalCompositeOperation="source-over";
   g.clearRect(0,0,W,H);
+  if(level==="game"){drawEmbers(.5,.3);gameFrame();requestAnimationFrame(frame);return}
   const e=ss(zoom),es=ss(sz);
   drawEmbers(1,es*.5+(level==="pair"?mix*.3:0));
   if(es<.99&&e<.995)drawMap(1-Math.max(e,es),Math.max(e,es));
@@ -312,7 +374,7 @@ function placard(i){const p=P[i];
   $("#placard").scrollTop=0;$("#placard").querySelectorAll(".cite").forEach(b=>b.onclick=()=>openRefs(+b.dataset.n));
   $("#pPrev").onclick=()=>openPair((i+P.length-1)%P.length);$("#pNext").onclick=()=>openPair((i+1)%P.length)}
 function openPair(i){cur=i;mix=0;mixAuto=true;$("#mixHint").textContent="drag, or watch it heal";placard(i);if(level!=="pair"){from=nodes()[i];level="pair";zoomT=1;show("#centre",false);show("#begin",false);show("#pair",true);$("#mapBtn").classList.remove("hide")}}
-function toMap(){if(level==="session")endSession();level="map";zoomT=0;show("#pair",false);show("#centre",true);show("#begin",true);$("#mapBtn").classList.add("hide");resetCentre()}
+function toMap(){if(level==="session")endSession();if(level==="game"){closeGame();return}level="map";zoomT=0;show("#pair",false);show("#centre",true);show("#begin",true);$("#mapBtn").classList.add("hide");resetCentre()}
 $("#mix").addEventListener("input",e=>{mixAuto=false;mix=+e.target.value/1000;$("#mixHint").textContent=mix>.95?"healed":"you're moving it"});
 $("#mapBtn").onclick=toMap;
 let ctT=null;function setCentre(k,h,p){[$("#cK"),$("#cH"),$("#cP")].forEach(e=>e.style.opacity=0);clearTimeout(ctT);ctT=setTimeout(()=>{$("#cK").textContent=k;$("#cH").textContent=h;$("#cP").textContent=p;[$("#cK"),$("#cH"),$("#cP")].forEach(e=>e.style.opacity=1)},160)}
@@ -320,7 +382,7 @@ function resetCentre(){setCentre("healed masculinity","Wildfire into hearth","Sa
 function pick(x,y){const N=nodes();let b=-1,bd=44;N.forEach((p,i)=>{const d=Math.hypot(p[0]-x,p[1]-y);if(d<bd){bd=d;b=i}});return b}
 cv.addEventListener("pointermove",e=>{if(level!=="map")return;const i=pick(e.clientX,e.clientY);if(i!==hov){hov=i;cv.style.cursor=i>=0?"pointer":"default";if(i>=0)setCentre(P[i].from+" \u2192 "+P[i].to,P[i].to,P[i].line);else resetCentre()}});
 cv.addEventListener("click",e=>{if(level!=="map")return;const i=pick(e.clientX,e.clientY);if(i>=0)openPair(i)});
-addEventListener("keydown",e=>{if(e.key==="Escape"){if($("#drawer").classList.contains("open"))$("#drawer").classList.remove("open");else if(level!=="map")toMap()}if(level==="pair"){if(e.key==="ArrowRight")openPair((cur+1)%P.length);if(e.key==="ArrowLeft")openPair((cur+P.length-1)%P.length)}});
+addEventListener("keydown",e=>{if(e.key==="Escape"){if(level==="game"){closeGame();return}if($("#drawer").classList.contains("open"))$("#drawer").classList.remove("open");else if(level!=="map")toMap()}if(level==="pair"){if(e.key==="ArrowRight")openPair((cur+1)%P.length);if(e.key==="ArrowLeft")openPair((cur+P.length-1)%P.length)}});
 
 /* sources */
 $("#refList").innerHTML=REFS.map((r,i)=>`<li id="r${i+1}"><b>[${i+1}]</b> ${r}</li>`).join("");
@@ -354,6 +416,101 @@ function endSession(){if(sess){clearInterval(sess.timer)}sess=null;szT=0;show("#
 $("#startBtn").onclick=()=>{startSession()};
 $("#pauseBtn").onclick=()=>{if(!sess)return;if(sess.done){endSession();startSession();return}sess.paused=!sess.paused;$("#pauseBtn").textContent=sess.paused?"Resume":"Pause";$("#sCue").style.opacity=sess.paused?0:.75};
 $("#endBtn").onclick=()=>{endSession();level="map";zoomT=0;show("#centre",true);show("#begin",true);$("#mapBtn").classList.add("hide")};
+/* ===== Tend the Fire ===== */
+const WORDS={
+feel:{good:["naming it","tears are ok","honesty","I'm hurting","feel it fully","say it aloud","grief","joy"],bad:["bottle it up","man up","numb out","fake fine","swallow it","never cry","stone face","shut down"]},
+connect:{good:["call a friend","ask for help","brotherhood","be known","reach out","show up","let them in","listen"],bad:["go it alone","ghost them","need no one","wall up","hide it","lone wolf","isolate","push away"]},
+respect:{good:["self-respect","grace","I'm learning","kind self-talk","enough","forgive myself","worthy","own it"],bad:["self-hatred","not enough","I'm a failure","shame spiral","punish myself","worthless","hide mistakes","beat myself up"]},
+protect:{good:["protect","courage","calm anger","boundaries","defend others","quiet power","restraint","shield"],bad:["lash out","rage","intimidate","punch walls","dominate","threaten","revenge","hurt back"]},
+steady:{good:["breathe","presence","let go","trust","patience","ground","slow down","stillness"],bad:["control","white-knuckle","micromanage","clench","panic","grip tight","force it","overthink"]},
+purpose:{good:["purpose","craft","service","meaning","build","legacy","calling","mission"],bad:["prove it","flex","clout","compare","outdo them","status","approval","show off"]},
+body:{good:["rest","sleep","stretch","move","feel the body","nourish","play","sunlight"],bad:["ignore pain","no sleep","play hurt","armour up","numb it","burn out","skip meals","no breaks"]},
+whole:{good:["tenderness","gentle","warmth","nurture","hug","soft heart","care","receive"],bad:["too soft","toughen up","be hard","cold","no hugs","act tough","mask","guarded"]}
+};
+const THEMES=Object.keys(WORDS);
+const G={on:false,run:false,fire:0,score:0,level:1,combo:0,best:0,px:.5,vx:0,embers:[],drops:[],sparks:[],prompt:"feel",ptime:0,plen:16,spawn:0,breath:1,breathing:false,wind:0,windT:0,keys:{},caughtBad:[],sound:true,shake:0};
+try{G.best=+localStorage.getItem("hearth:best")||0}catch(e){}
+const gEl=id=>document.getElementById(id);
+function lvl(){const n=G.level;return{fall:85+22*n,every:Math.max(.42,1.05-.08*n),plen:Math.max(8,17-n),hint:n<=2?1-(n-1)*.5:0,wind:n>=4,rain:n>=5}}
+function setPrompt(t){G.prompt=t;G.ptime=0;G.plen=lvl().plen;const p=P.find(x=>x.id===t);const el=gEl("gPrompt");el.classList.add("flip");setTimeout(()=>{el.textContent=p.to;gEl("gSub").textContent=`${p.from} \u2192 ${p.to} \u00b7 matching words count double`;el.classList.remove("flip")},300)}
+function newPrompt(){let t;do{t=THEMES[(Math.random()*THEMES.length)|0]}while(t===G.prompt&&THEMES.length>1);setPrompt(t)}
+function spawnEmber(){const L=lvl(),theme=Math.random()<.45?G.prompt:THEMES[(Math.random()*THEMES.length)|0],good=Math.random()<.55,onScreen=new Set(G.embers.map(e=>e.w)),pool=WORDS[theme][good?"good":"bad"],list=pool.filter(w=>!onScreen.has(w)).length?pool.filter(w=>!onScreen.has(w)):pool,gold=Math.random()<.035;
+  G.embers.push({x:.08+Math.random()*.84,y:-.04,v:L.fall*(.8+Math.random()*.45),w:gold?"hearthstone":list[(Math.random()*list.length)|0],good:gold||good,theme,gold,ph:Math.random()*TAU,i:list.indexOf(list[0])})}
+function gameReset(){Object.assign(G,{fire:0,score:0,level:1,combo:0,embers:[],drops:[],sparks:[],spawn:.6,breath:1,wind:0,windT:0,caughtBad:[],shake:0,px:.5});newPrompt();hud()}
+function hud(){gEl("gScore").textContent=Math.round(G.score);gEl("gLevel").textContent=G.level;gEl("gCombo").textContent="\u00d7"+(1+Math.floor(G.combo/4));gEl("gBest").textContent=Math.round(G.best);gEl("gFill").style.height=`calc(${(G.fire+10)/20*100}% - 4px)`}
+function floatWord(txt,x,y,col){const d=document.createElement("div");d.className="fw";d.textContent=txt;d.style.left=x+"px";d.style.top=y+"px";d.style.color=col;gEl("gFloat").appendChild(d);setTimeout(()=>d.remove(),1150)}
+/* sound */
+let GA=null;function gSound(type,k=0){if(!G.sound)return;try{GA=GA||new (window.AudioContext||window.webkitAudioContext)();const t=GA.currentTime,o=GA.createOscillator(),gg=GA.createGain();o.connect(gg);gg.connect(GA.destination);
+  if(type==="good"){const scale=[0,2,4,7,9,12,14,16,19,21];o.type="triangle";o.frequency.value=330*Math.pow(2,scale[Math.min(k,9)]/12);gg.gain.setValueAtTime(.0001,t);gg.gain.exponentialRampToValueAtTime(.18,t+.01);gg.gain.exponentialRampToValueAtTime(.0001,t+.45);o.start(t);o.stop(t+.5)}
+  else if(type==="bad"){o.type="sawtooth";o.frequency.setValueAtTime(140,t);o.frequency.exponentialRampToValueAtTime(55,t+.35);const f=GA.createBiquadFilter();f.type="lowpass";f.frequency.value=500;o.disconnect();o.connect(f);f.connect(gg);gg.gain.setValueAtTime(.16,t);gg.gain.exponentialRampToValueAtTime(.0001,t+.4);o.start(t);o.stop(t+.45)}
+  else if(type==="win"){[0,4,7,12].forEach((s,i)=>{const oo=GA.createOscillator(),g2=GA.createGain();oo.type="triangle";oo.frequency.value=262*Math.pow(2,s/12);oo.connect(g2);g2.connect(GA.destination);g2.gain.setValueAtTime(.0001,t+i*.12);g2.gain.exponentialRampToValueAtTime(.16,t+i*.12+.02);g2.gain.exponentialRampToValueAtTime(.0001,t+i*.12+.6);oo.start(t+i*.12);oo.stop(t+i*.12+.65)})}
+  else if(type==="out"){o.type="sine";o.frequency.setValueAtTime(220,t);o.frequency.exponentialRampToValueAtTime(40,t+1.2);gg.gain.setValueAtTime(.18,t);gg.gain.exponentialRampToValueAtTime(.0001,t+1.3);o.start(t);o.stop(t+1.35)}
+  else if(type==="drip"){o.type="sine";o.frequency.setValueAtTime(900,t);o.frequency.exponentialRampToValueAtTime(300,t+.12);gg.gain.setValueAtTime(.08,t);gg.gain.exponentialRampToValueAtTime(.0001,t+.15);o.start(t);o.stop(t+.18)}}catch(e){}}
+function catchEmber(e,bx,by){
+  const match=e.theme===G.prompt;let d;
+  if(e.gold){d=3;G.combo+=2}
+  else if(e.good){d=match?2:1;G.combo++}
+  else{d=match?-3:-2;G.combo=0;G.caughtBad.push(e);G.shake=.35}
+  G.fire=cl(G.fire+d,-10,10);const mult=1+Math.floor(G.combo/4);if(d>0)G.score+=d*10*mult;
+  floatWord((d>0?"+":"")+d+"  "+e.w,bx,by-40,d>0?"#ffc46b":"#8fb3d9");gSound(d>0?"good":"bad",G.combo);
+  for(let k=0;k<(d>0?14:8);k++)G.sparks.push({x:bx,y:by-20,vx:(Math.random()-.5)*220,vy:-Math.random()*260-40,life:1,c:d>0?"#ffc46b":"#7d8fa6"});
+  hud();
+  if(G.fire>=10)levelUp();else if(G.fire<=-10)gameOver()}
+function levelUp(){G.run=false;gSound("win");const p=P.find(x=>x.id===G.prompt);gEl("luK").textContent=`level ${G.level} cleared`;gEl("luH").textContent="Blaze";gEl("luP").textContent=`\u201c${p.aff}\u201d Next level: faster embers${G.level+1===3?", and the embers stop giving hints":G.level+1===4?", and the wind picks up":G.level+1===5?", and cold rain starts to fall (dodge it)":""}.`;gEl("gLevelUp").classList.remove("hide")}
+function gameOver(){G.run=false;gSound("out");if(G.score>G.best){G.best=G.score;try{localStorage.setItem("hearth:best",String(Math.round(G.best)))}catch(e){}}
+  gEl("goH").textContent=`Score ${Math.round(G.score)}`;gEl("goP").textContent=G.score>=G.best&&G.score>0?"New best. Every hearth has nights like this, and every fire can be rekindled.":"Every hearth has nights like this, and every fire can be rekindled.";
+  const seen=new Set(),rows=G.caughtBad.filter(e=>!seen.has(e.w)&&seen.add(e.w)).slice(-8).map(e=>{const k=WORDS[e.theme].bad.indexOf(e.w),h=WORDS[e.theme].good[k]||WORDS[e.theme].good[0];return`<div><span class="w">${e.w}</span><span style="color:var(--dim)">\u2192</span><span class="h">${h}</span></div>`});
+  gEl("goRecap").innerHTML=rows.length?`<div class="k" style="margin-bottom:4px">what smothered it, and what heals it</div>${rows.join("")}`:"";gEl("gOver").classList.remove("hide");hud()}
+function gameFrame(){
+  const L=lvl(),bw=Math.max(110,Math.min(180,W*.13)),by=H-Math.max(70,H*.11)-(innerWidth<640?40:0);
+  // input
+  const dir=(G.keys.ArrowRight||G.keys.d?1:0)-(G.keys.ArrowLeft||G.keys.a?1:0);if(dir)G.px=cl(G.px+dir*DT*.95,.04,.96);
+  G.breathing=G.breathing&&G.breath>0;if(G.breathing)G.breath=Math.max(0,G.breath-DT/3);else G.breath=Math.min(1,G.breath+DT/7);
+  gEl("gBreathBar").style.width=(G.breath*100)+"%";gEl("breathBtn").classList.toggle("on",G.breathing);
+  const ts=G.run?(G.breathing?.38:1):0,dt=DT*ts;
+  if(G.run){G.ptime+=dt;gEl("gPbar").style.width=Math.max(0,100-G.ptime/G.plen*100)+"%";if(G.ptime>G.plen)newPrompt();
+    G.spawn-=dt;if(G.spawn<=0){spawnEmber();G.spawn=L.every*(.75+Math.random()*.5)}
+    if(L.wind){G.windT-=dt;if(G.windT<=0){G.wind=(Math.random()-.5)*.5;G.windT=3+Math.random()*4}}else G.wind=0;
+    if(L.rain&&Math.random()<dt*(.5+G.level*.08))G.drops.push({x:Math.random(),y:-.02,v:H*.55})}
+  // background glow scaled by fire
+  const f01=(G.fire+10)/20,px=G.px*W;
+  g.save();g.globalAlpha=.25+.5*f01;const gr=Math.max(W,H)*.45*(.4+.8*f01);g.drawImage(GLOW,px-gr,by-gr*.8,gr*2,gr*2);g.restore();
+  // embers
+  g.save();g.textAlign="center";g.textBaseline="middle";
+  for(let i=G.embers.length-1;i>=0;i--){const e=G.embers[i];e.y+=e.v*dt/H;e.x=cl(e.x+G.wind*dt*.12,.03,.97);const x=e.x*W+Math.sin(T*2+e.ph)*6,y=e.y*H;
+    if(y>by-14&&y<by+18&&Math.abs(x-px)<bw/2){G.embers.splice(i,1);if(G.run)catchEmber(e,x,by);continue}
+    if(y>H+20){if(e.good&&!e.gold)G.combo=0,hud();G.embers.splice(i,1);continue}
+    const hint=L.hint,warm=e.good?1:0,col=e.gold?"#fff1b8":mixCol("#ff8a3a",warm?"#ffc46b":"#b9774f",hint*.9);
+    g.globalCompositeOperation="lighter";g.globalAlpha=.9;const r=e.gold?11:8;g.drawImage(GLOW,x-r*3,y-r*3,r*6,r*6);g.fillStyle=col;g.beginPath();g.arc(x,y,r*.55,0,TAU);g.fill();
+    g.globalCompositeOperation="source-over";g.globalAlpha=1;g.font=`500 ${innerWidth<640?15:18}px Cormorant, Georgia, serif`;g.fillStyle=e.gold?"#fff1b8":"#f6ede4";g.fillText(e.w,x,y-r-12)}
+  // rain
+  g.strokeStyle="#9fc6ff";g.lineWidth=1.4;for(let i=G.drops.length-1;i>=0;i--){const d=G.drops[i];d.y+=d.v*dt/H;const x=d.x*W,y=d.y*H;g.globalAlpha=.7;g.beginPath();g.moveTo(x,y);g.lineTo(x-G.wind*20,y-14);g.stroke();
+    if(y>by-10&&y<by+14&&Math.abs(x-px)<bw/2){G.drops.splice(i,1);if(G.run){G.fire=cl(G.fire-1,-10,10);G.combo=0;gSound("drip");floatWord("\u22121 rain",x,by-30,"#9fc6ff");hud();if(G.fire<=-10)gameOver()}continue}
+    if(y>H+20)G.drops.splice(i,1)}
+  g.restore();
+  // brazier + fire
+  const shake=G.shake>0?(Math.random()-.5)*10*G.shake:0;G.shake=Math.max(0,G.shake-DT);
+  const fr=lerp(8,Math.min(70,H*.08),f01);if(G.fire>-10)flame(px+shake,by-6,fr,.25+.75*f01,G.breathing?.5:0,1);
+  g.save();g.strokeStyle="#8a5a3c";g.fillStyle="rgba(40,22,14,.9)";g.lineWidth=2;g.beginPath();g.moveTo(px-bw/2+shake,by+2);g.quadraticCurveTo(px+shake,by+44,px+bw/2+shake,by+2);g.closePath();g.fill();g.stroke();g.beginPath();g.moveTo(px-bw*.18+shake,by+30);g.lineTo(px-bw*.26+shake,by+52);g.moveTo(px+bw*.18+shake,by+30);g.lineTo(px+bw*.26+shake,by+52);g.stroke();g.restore();
+  // sparks
+  g.save();g.globalCompositeOperation="lighter";for(let i=G.sparks.length-1;i>=0;i--){const s=G.sparks[i];s.life-=DT*1.3;if(s.life<=0){G.sparks.splice(i,1);continue}s.vy+=420*DT;s.x+=s.vx*DT;s.y+=s.vy*DT;g.globalAlpha=s.life;g.fillStyle=s.c;g.fillRect(s.x-1.5,s.y-1.5,3,3)}g.restore();
+  // breathing vignette
+  if(G.breathing){g.save();g.globalAlpha=.18;g.fillStyle="#9fc6ff";g.fillRect(0,0,W,H);g.restore()}
+}
+function openGame(){level="game";show("#centre",false);show("#begin",false);show("#pair",false);show("#game",true);$("#mapBtn").classList.remove("hide");gEl("gStart").classList.remove("hide");gEl("gOver").classList.add("hide");gEl("gLevelUp").classList.add("hide");gameReset();G.run=false}
+function closeGame(){G.run=false;show("#game",false);level="map";zoomT=0;szT=0;show("#centre",true);show("#begin",true);$("#mapBtn").classList.add("hide");resetCentre()}
+gEl("playBtn").onclick=openGame;gEl("gQuit").onclick=closeGame;gEl("goBack").onclick=closeGame;
+gEl("gGo").onclick=()=>{gEl("gStart").classList.add("hide");gameReset();G.run=true};
+gEl("goAgain").onclick=()=>{gEl("gOver").classList.add("hide");gameReset();G.run=true};
+gEl("luGo").onclick=()=>{gEl("gLevelUp").classList.add("hide");G.level++;G.fire=2;G.embers=[];G.drops=[];newPrompt();hud();G.run=true};
+gEl("gSnd").onclick=()=>{G.sound=!G.sound;gEl("gSnd").setAttribute("aria-pressed",G.sound);gEl("gSnd").textContent=G.sound?"Game sound on":"Game sound off"};
+addEventListener("keydown",e=>{if(level!=="game")return;const k=e.key.length===1?e.key.toLowerCase():e.key;G.keys[k]=true;if(e.key===" "){e.preventDefault();G.breathing=true}if(["ArrowLeft","ArrowRight"].includes(e.key))e.preventDefault()});
+addEventListener("keyup",e=>{const k=e.key.length===1?e.key.toLowerCase():e.key;G.keys[k]=false;if(e.key===" ")G.breathing=false});
+const bb=gEl("breathBtn");bb.addEventListener("pointerdown",e=>{e.preventDefault();G.breathing=true});["pointerup","pointerleave","pointercancel"].forEach(t=>bb.addEventListener(t,()=>G.breathing=false));
+cv.addEventListener("pointerdown",e=>{if(level==="game"){G.drag=true;G.px=cl(e.clientX/W,.04,.96)}});
+addEventListener("pointermove",e=>{if(level==="game"&&(G.drag||e.pointerType==="mouse")&&e.target===cv)G.px=cl(e.clientX/W,.04,.96)});
+addEventListener("pointerup",()=>{G.drag=false});
+
 </script>
 
 </body>
