@@ -141,6 +141,15 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
 .ov .rules{text-align:left;display:grid;gap:6px;margin:14px 0;font-size:14px}
 .ov .rules span{color:var(--gold)}
 .ov .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+#goFire{margin:16px 0 4px}
+#goFire svg{display:block;width:min(300px,100%);height:auto;margin:0 auto;overflow:visible}
+#goFire .legend{display:flex;gap:14px;justify-content:center;font-size:11px;letter-spacing:.08em;color:var(--dim);margin-top:4px}
+#goFire .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+#goFire .edges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+#goFire .edge{border:1px solid rgba(255,196,107,.35);border-radius:999px;padding:6px 12px;font-size:12.5px;color:var(--ink)}
+#goFire .edge b{color:var(--gold);font-weight:600}
+#goFire button.edge{cursor:pointer}
+#goFire button.edge:hover{background:rgba(255,122,47,.12)}
 .recap{text-align:left;font-size:14px;display:grid;gap:4px;margin:12px 0}
 .recap div{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
 .recap .w{color:#ff8a5c;font-style:italic;font-family:var(--f-d);font-size:17px}
@@ -222,6 +231,7 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
   <div class="stats"><div><small>Score</small><b id="goScore">0</b></div><div><small>Level</small><b id="goLevel">1</b></div><div><small>Best combo</small><b id="goCombo">0</b></div><div><small>Caught</small><b id="goCaught">0</b></div></div>
   <div class="namecard" id="gNameCard"><div class="nc-h" id="gNameH">Put your name on the board</div><form id="gNameForm" class="nameform"><input id="gNameIn" maxlength="10" placeholder="YOUR NAME" autocomplete="off" spellcheck="false" aria-label="Name for the leaderboard"><button class="fire-btn" id="gSave" type="submit">Save</button></form><div class="nc-s" id="gNameS">Up to 10 letters. Press Enter to save.</div></div>
   <div class="k" style="margin:14px 0 8px">high scores</div><ol class="board" id="gBoard"></ol><div class="boardnote">Loading the shared leaderboard&#x2026;</div>
+  <div id="goFire"></div>
   <div class="recap" id="goRecap"></div>
   <div class="row"><button class="fire-btn" type="button" id="goAgain">Rekindle</button><button class="ghost" type="button" id="goBack">Back to the Hearth</button></div></div></div>
 </section>
@@ -336,7 +346,7 @@ function flame(cx,cy,R,h,breath=0,a=1,lite=false){
   g.save();g.globalCompositeOperation="lighter";
   const gr2=R*2.4;g.globalAlpha=Math.min(1,.42*a*(.8+.4*breath));g.drawImage(glowImg(),cx-gr2,cy-R*.3-gr2,gr2*2,gr2*2);
   const layers=[[1,"#c2361b","#ff8a3a"],[.72,"#ff7a2f","#ffc46b"],[.42,"#ffc46b","#fff1d6"]];
-  (lite?layers.slice(1):layers).forEach(([s,c1,c2],li)=>{if(lite)li++;IRI_OFF=li*125+Math.sin(T*.15+li)*25;const pts=[],n=lite?32:72,rr=R*s*(1+.08*breath);
+  (lite?layers.slice(1):layers).forEach(([s,c1,c2],li)=>{if(lite)li++;IRI_OFF=li*125+Math.sin(T*.06+li)*25;const pts=[],n=lite?32:72,rr=R*s*(1+.08*breath);
     for(let i=0;i<=n;i++){const u=i/n,ang=u*TAU;const base=Math.sin(ang/2);// teardrop: wide bottom, point top
       const wild=(1-h)*(Math.sin(u*37+T*9+li)*.18+Math.sin(u*13-T*6.3)*.14+Math.sin(u*71+T*13)*.08);
       const calm=h*Math.sin(u*6-T*1.6+li)*.04;
@@ -353,7 +363,7 @@ function flame(cx,cy,R,h,breath=0,a=1,lite=false){
 }
 
 /* ===== heat: the game's fire gets hotter each level (orange, yellow, white-yellow, blue, purple, then white) ===== */
-const HEAT=[[-6,1,0],[0,1,.04],[16,1,.1],[26,.55,.3],[195,.85,.12],[245,.85,.1],[0,0,.55]];
+const HEAT=[[-6,1,0],[0,1,.04],[16,1,.1],[26,.55,.3],[200,1,.16],[248,1,.12],[0,0,.55]];
 let TINT=null,IRI_OFF=0;const tintCache=new Map(),glowCache=new Map();
 function hexHsl(h){let r=parseInt(h.slice(1,3),16)/255,g2=parseInt(h.slice(3,5),16)/255,b=parseInt(h.slice(5,7),16)/255;const mx=Math.max(r,g2,b),mn=Math.min(r,g2,b),l=(mx+mn)/2;let hh=0,sa=0;if(mx!==mn){const d=mx-mn;sa=l>.5?d/(2-mx-mn):d/(mx+mn);hh=mx===r?(g2-b)/d+(g2<b?6:0):mx===g2?(b-r)/d+2:(r-g2)/d+4;hh*=60}return[hh,sa,l]}
 function hslHex(h,sa,l){h=((h%360)+360)%360;const c=(1-Math.abs(2*l-1))*sa,x=c*(1-Math.abs((h/60)%2-1)),m=l-c/2;let [r,g2,b]=h<60?[c,x,0]:h<120?[x,c,0]:h<180?[0,c,x]:h<240?[0,x,c]:h<300?[x,0,c]:[c,0,x];const f=v=>Math.round(cl(v+m)*255).toString(16).padStart(2,"0");return"#"+f(r)+f(g2)+f(b)}
@@ -361,15 +371,15 @@ function heatTint(x){x=cl(x,0,HEAT.length-1);const i=Math.min(HEAT.length-2,Math
   if(Math.abs(b[0]-a[0])>60){dh=u<.5?a[0]:b[0];sm=u<.5?a[1]*(1-2*u):b[1]*(2*u-1);lw=lerp(a[2],b[2],u)+.22*Math.sin(Math.PI*u)}else{dh=lerp(a[0],b[0],u);sm=lerp(a[1],b[1],u);lw=lerp(a[2],b[2],u)}
   const key=Math.round(x*20)/20;return{key,dh,sm,lw,iri:ss((x-5.35)/.65)}}
 function tc(hex){if(!TINT)return hex;const k=hex+TINT.key;let v=tintCache.get(k);if(!v){const[h,sa,l]=hexHsl(hex);v=hslHex(h+TINT.dh,cl(sa*TINT.sm),cl(l+(1-l)*TINT.lw));if(tintCache.size>4000)tintCache.clear();tintCache.set(k,v)}
-  if(TINT.iri>0){const bright=hexHsl(hex)[2];v=rgbHex(mixCol(v,hslHex(T*7+IRI_OFF,1,lerp(.6,.74,bright)),TINT.iri*.8*(1-bright*.5)))}return v}
-function glowImg(){if(!TINT)return GLOW;const gk=TINT.iri>0?TINT.key+"|"+Math.floor(((T*7)%360)/12):TINT.key;let c=glowCache.get(gk);if(!c){c=document.createElement("canvas");c.width=c.height=128;const x=c.getContext("2d"),gr=x.createRadialGradient(64,64,0,64,64,64),[a,b,d]=[tc("#ff9646"),tc("#ff6e2d"),tc("#ff5a1e")].map(h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)].join(","));
+  if(TINT.iri>0){const bright=hexHsl(hex)[2];v=rgbHex(mixCol(v,hslHex(T*2.5+IRI_OFF,1,lerp(.6,.74,bright)),TINT.iri*.8*(1-bright*.5)))}return v}
+function glowImg(){if(!TINT)return GLOW;const gk=TINT.iri>0?TINT.key+"|"+Math.floor(((T*2.5)%360)/12):TINT.key;let c=glowCache.get(gk);if(!c){c=document.createElement("canvas");c.width=c.height=128;const x=c.getContext("2d"),gr=x.createRadialGradient(64,64,0,64,64,64),[a,b,d]=[tc("#ff9646"),tc("#ff6e2d"),tc("#ff5a1e")].map(h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)].join(","));
   gr.addColorStop(0,`rgba(${a},1)`);gr.addColorStop(.35,`rgba(${b},.45)`);gr.addColorStop(1,`rgba(${d},0)`);x.fillStyle=gr;x.fillRect(0,0,128,128);if(glowCache.size>400)glowCache.clear();glowCache.set(gk,c)}return c}
 
 /* opal shimmer for the white-hot stage: many hues at once, swirling and flickering */
 const hueGlowCache=new Map();
 function hueGlow(h){const k=Math.round(((h%360)+360)%360/15);let c=hueGlowCache.get(k);if(!c){c=document.createElement("canvas");c.width=c.height=96;const x=c.getContext("2d"),gr=x.createRadialGradient(48,48,0,48,48,48);gr.addColorStop(0,hslHex(k*15,1,.62));gr.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=gr;x.fillRect(0,0,96,96);hueGlowCache.set(k,c)}return c}
 const jit=(t,i)=>Math.sin(t*1.7+i*2.1)*.5+Math.sin(t*3.9+i*5.3)*.3+Math.sin(t*7.7+i*1.3)*.2;
-function opal(cx,cy,R,a){const P0=flame.outer;if(!P0)return;const S=T*.12;g.save();
+function opal(cx,cy,R,a){const P0=flame.outer;if(!P0)return;const S=T*.045;g.save();
   // slowly drifting coloured glows, each its own hue
   g.globalCompositeOperation="lighter";for(let k=0;k<4;k++){const ang=S*(1+k*.3)+k*1.57+jit(S,k)*.8,d=R*(.5+.3*jit(S*.8,k+9)),gx=cx+Math.cos(ang)*d,gy=cy-R*.4+Math.sin(ang)*d*.8,sz=R*(1.6+.4*jit(S,k+3));g.globalAlpha=a*.36;g.drawImage(hueGlow(S*60+k*90+jit(S,k)*70),gx-sz,gy-sz,sz*2,sz*2)}
   // a slowly turning multi-hue sheen inside the flame: several colours visible at once
@@ -380,7 +390,7 @@ function opal(cx,cy,R,a){const P0=flame.outer;if(!P0)return;const S=T*.12;g.save
   // gently swaying tongues, each with its own slowly wandering hue
   g.globalCompositeOperation="lighter";
   for(let k=0;k<7;k++){const tx=cx+(hsh(k)-.5)*R*.9+Math.sin(S*3+k*1.7)*R*.08,th=R*(.75+.45*(.5+.5*Math.sin(S*2.4+k*2.3))),tw=R*(.13+.08*hsh(k+5));g.globalAlpha=a*(.32+.22*(.5+.5*Math.sin(S*2+k)));g.fillStyle=hslHex(hsh(k*7)*360+S*45+jit(S,k+20)*60,1,.66);
-    g.beginPath();g.moveTo(tx-tw,cy+R*.2);g.quadraticCurveTo(tx-tw*.6,cy-th*.6,tx+Math.sin(T*1.1+k)*tw*.6,cy-th);g.quadraticCurveTo(tx+tw*.6,cy-th*.6,tx+tw,cy+R*.2);g.closePath();g.fill()}
+    g.beginPath();g.moveTo(tx-tw,cy+R*.2);g.quadraticCurveTo(tx-tw*.6,cy-th*.6,tx+Math.sin(T*.45+k)*tw*.6,cy-th);g.quadraticCurveTo(tx+tw*.6,cy-th*.6,tx+tw,cy+R*.2);g.closePath();g.fill()}
   g.restore();
   // keep a white-hot core
   g.save();g.globalCompositeOperation="lighter";g.globalAlpha=a*.85;g.fillStyle="#ffffff";g.beginPath();g.ellipse(cx,cy-R*.15,R*.22,R*.42,0,0,TAU);g.fill();g.restore()}
@@ -527,7 +537,7 @@ function setPrompt(t){G.prompt=t;G.ptime=0;G.top0=0;G.plen=lvl().plen;const p=P.
 function newPrompt(){let t;do{t=THEMES[(Math.random()*THEMES.length)|0]}while(t===G.prompt&&THEMES.length>1);setPrompt(t)}
 function spawnEmber(){const L=lvl(),theme=Math.random()<.45?G.prompt:THEMES[(Math.random()*THEMES.length)|0],good=Math.random()<.55,onScreen=new Set(G.embers.map(e=>e.w)),pool=WORDS[theme][good?"good":"bad"],list=pool.filter(w=>!onScreen.has(w)).length?pool.filter(w=>!onScreen.has(w)):pool,gold=Math.random()<.035;
   if(!G.top0)G.top0=(gEl("gTop").getBoundingClientRect().bottom+18)/H;const top0=G.top0;G.embers.push({age:0,x:.1+Math.random()*.8,y:top0,v:L.fall*(.8+Math.random()*.45),w:gold?"hearthstone":list[(Math.random()*list.length)|0],good:gold||good,theme,gold,ph:Math.random()*TAU,i:list.indexOf(list[0])})}
-function gameReset(){Object.assign(G,{heat:0,goodN:0,badN:0,bestCombo:0,el:0,fire:0,score:0,level:1,combo:0,embers:[],drops:[],sparks:[],spawn:.4,breath:1,wind:0,windT:0,caughtBad:[],shake:0,px:.5});newPrompt();hud()}
+function gameReset(){Object.assign(G,{stats:Object.fromEntries(THEMES.map(t=>[t,{fell:0,got:0,bad:0}])),heat:0,goodN:0,badN:0,bestCombo:0,el:0,fire:0,score:0,level:1,combo:0,embers:[],drops:[],sparks:[],spawn:.4,breath:1,wind:0,windT:0,caughtBad:[],shake:0,px:.5});newPrompt();hud()}
 function hud(){gEl("gScore").textContent=Math.round(G.score);gEl("gLevel").textContent=G.level;gEl("gCombo").textContent="\u00d7"+(1+Math.floor(G.combo/4));gEl("gBest").textContent=Math.round(G.best);gEl("gFill").style.height=`calc(${(G.fire+5)/15*100}% - 4px)`}
 function floatWord(txt,x,y,col){const d=document.createElement("div");d.className="fw";d.textContent=txt;d.style.left=x+"px";d.style.top=y+"px";d.style.color=col;gEl("gFloat").appendChild(d);setTimeout(()=>d.remove(),1150)}
 /* sound */
@@ -540,8 +550,8 @@ let GA=null;function gSound(type,k=0){if(!G.sound)return;try{GA=GA||new (window.
 function catchEmber(e,bx,by){
   const match=e.theme===G.prompt;let d;
   if(e.gold){d=3;G.combo+=2}
-  else if(e.good){d=match?2:1;G.combo++;G.goodN++}
-  else{d=match?-3:-2;G.combo=0;G.badN++;G.caughtBad.push(e);G.shake=.35}
+  else if(e.good){d=match?2:1;G.combo++;G.goodN++;G.stats[e.theme].fell++;G.stats[e.theme].got++}
+  else{d=match?-3:-2;G.combo=0;G.badN++;G.stats[e.theme].bad++;G.caughtBad.push(e);G.shake=.35}
   G.bestCombo=Math.max(G.bestCombo,G.combo);
   G.fire=cl(G.fire+d,-5,10);const mult=1+Math.floor(G.combo/4);if(d>0)G.score+=d*10*mult;
   floatWord((d>0?"+":"")+d+"  "+e.w,bx,by-40,d>0?"#ffc46b":"#8fb3d9");gSound(d>0?"good":"bad",G.combo);
@@ -553,17 +563,34 @@ function levelUp(){G.run=false;G.levelling=true;gSound("win");const p=P.find(x=>
   gEl("gBan2").textContent=`Level ${nx}`;gEl("gBan3").textContent=`\u201c${p.aff}\u201d`;gEl("gBan4").textContent=nx===3?"the embers stop giving hints":nx===4?"the wind picks up":nx===5?"cold rain starts to fall \u00b7 dodge it":"a little faster";
   const b=gEl("gBanner");b.classList.remove("show");void b.offsetWidth;b.classList.add("show");
   setTimeout(()=>{G.levelling=false;if(level!=="game")return;G.level=nx;G.fire=0;G.el=0;G.spawn=.6;G.embers=[];G.drops=[];newPrompt();hud();if(!G.paused&&gEl("gOver").classList.contains("hide"))G.run=true},2600)}
+function drawFireChart(){const el=gEl("goFire"),st=G.stats||{},th=THEMES,n=th.length,R=96,c=130;
+  const rate=t=>st[t]&&st[t].fell?st[t].got/st[t].fell:null,maxBad=Math.max(2,...th.map(t=>st[t]?st[t].bad:0));
+  const any=th.some(t=>st[t]&&(st[t].fell||st[t].bad));if(!any){el.innerHTML="";return}
+  const pt=(i,v)=>{const a=-Math.PI/2+i/n*TAU;return[c+Math.cos(a)*R*v,c+Math.sin(a)*R*v]},poly=f=>th.map((t,i)=>pt(i,f(t)).map(v=>v.toFixed(1)).join(",")).join(" ");
+  const short={feel:"Feeling",connect:"Connection",respect:"Self-respect",protect:"Protection",steady:"Steadiness",purpose:"Purpose",body:"Body",whole:"Wholeness"};
+  let svg=`<svg viewBox="0 0 260 260" role="img" aria-label="Your fire: share of healing words caught in each theme, and wound words that got in">`;
+  [.25,.5,.75,1].forEach(v=>{svg+=`<polygon points="${poly(()=>v)}" fill="none" stroke="rgba(255,196,107,${v===1?.28:.12})" stroke-width="1"/>`});
+  th.forEach((t,i)=>{const[x,y]=pt(i,1);svg+=`<line x1="${c}" y1="${c}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="rgba(255,196,107,.12)"/>`;const[lx,ly]=pt(i,1.24);const r=rate(t);svg+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="${r===null?"#6f5f55":"#d8c8bc"}" font-size="10.5" font-family="Karla, sans-serif" text-anchor="${Math.abs(lx-c)<8?"middle":lx>c?"start":"end"}" dominant-baseline="middle">${short[t]}</text>`});
+  svg+=`<polygon points="${poly(t=>Math.max(.04,rate(t)||0))}" fill="rgba(255,196,107,.28)" stroke="#ffc46b" stroke-width="1.6" stroke-linejoin="round"/>`;
+  svg+=`<polygon points="${poly(t=>st[t]?.04+.6*st[t].bad/maxBad:.04)}" fill="rgba(255,90,60,.25)" stroke="#ff6a4a" stroke-width="1.2" stroke-linejoin="round"/>`;
+  svg+=`</svg>`;
+  const scored=th.filter(t=>st[t]&&st[t].fell>=2),best=scored.slice().sort((a,b)=>rate(b)-rate(a))[0],edge=scored.slice().sort((a,b)=>rate(a)-rate(b)||st[b].bad-st[a].bad)[0];
+  const P_=id=>P.find(p=>p.id===id);let edges="";
+  if(best)edges+=`<span class="edge">Strongest <b>${P_(best).to}</b> \u00b7 ${Math.round(rate(best)*100)}%</span>`;
+  if(edge&&edge!==best)edges+=`<button type="button" class="edge" data-edge="${edge}">Growth edge <b>${P_(edge).to}</b> \u00b7 open it \u2192</button>`;
+  el.innerHTML=`<div class="k" style="margin-bottom:6px">your fire this game</div>${svg}<div class="legend"><span><i style="background:#ffc46b"></i>healing words caught</span><span><i style="background:#ff6a4a"></i>wound words that got in</span></div><div class="edges">${edges}</div>`;
+  const b=el.querySelector("[data-edge]");if(b)b.onclick=()=>{const id=b.dataset.edge;closeGame();setTimeout(()=>openPair(P.findIndex(p=>p.id===id)),250)}}
 function gameOver(banked){G.run=false;gSound(banked?"win":"out");gEl("goK").textContent=banked?"you banked the fire":"the fire went out";if(G.score>G.best){G.best=G.score;try{localStorage.setItem("hearth:best",String(Math.round(G.best)))}catch(e){}}
   const rank=RANKS[Math.min(RANKS.length-1,G.level-1)];gEl("goRank").textContent=rank;
   gEl("goScore").textContent=Math.round(G.score);gEl("goLevel").textContent=G.level;gEl("goCombo").textContent=G.bestCombo;gEl("goCaught").textContent=G.goodN;
   gEl("goP").textContent=(G.score>=G.best&&G.score>0?"New best. ":"")+"Every hearth has nights like this, and every fire can be rekindled.";
   lastEntry=null;const ok=G.score>0;gEl("gNameIn").disabled=!ok;gEl("gSave").disabled=!ok;gEl("gNameIn").value="";gEl("gNameForm").hidden=!ok;
   pullBoard();const place=allScores().filter(r=>r.score>Math.round(G.score)).length+1;gEl("gNameH").textContent=ok?(place<=10?`#${place} on the board. Put your name on it`:"Put your name on the board"):"No points this time";gEl("gNameS").textContent=ok?"Up to 10 letters. Press Enter to save.":"Catch a few healing words to make the board.";
-  renderBoard(gEl("gBoard"));gEl("gOver").querySelector(".box").scrollTop=0;setTimeout(()=>{if(ok)gEl("gNameIn").focus()},350);
+  renderBoard(gEl("gBoard"));drawFireChart();gEl("gOver").querySelector(".box").scrollTop=0;setTimeout(()=>{if(ok)gEl("gNameIn").focus()},350);
   const seen=new Set(),rows=G.caughtBad.filter(e=>!seen.has(e.w)&&seen.add(e.w)).slice(-8).map(e=>{const k=WORDS[e.theme].bad.indexOf(e.w),h=WORDS[e.theme].good[k]||WORDS[e.theme].good[0];return`<div><span class="w">${e.w}</span><span style="color:var(--dim)">\u2192</span><span class="h">${h}</span></div>`});
   gEl("goRecap").innerHTML=rows.length?`<div class="k" style="margin-bottom:4px">what smothered it, and what heals it</div>${rows.join("")}`:"";gEl("gOver").classList.remove("hide");hud()}
 function gameFrame(){
-  G.heat=(G.heat||0)+((G.level-1)-(G.heat||0))*Math.min(1,DT*.35);TINT=heatTint(G.heat);
+  const heatT=(G.level-1)+.85*cl(.6*cl((G.fire+5)/15)+.4*Math.min(1,(G.el||0)/90));G.heat=(G.heat||0)+(heatT-(G.heat||0))*Math.min(1,DT*.25);TINT=heatTint(G.heat);
   if(TINT.key!==G._tk){G._tk=TINT.key;gEl("gFill").style.background=`linear-gradient(0deg,${tc("#6b2a14")},${tc("#ff7a2f")} 55%,${tc("#ffd27a")})`;gEl("gPrompt").style.color=tc("#ffc46b");document.querySelector("#gBanner .b1").style.color=tc("#ffc46b")}
   const L=lvl(),bw=Math.max(110,Math.min(180,W*.13)),by=H-Math.max(70,H*.11)-(innerWidth<640?40:0);
   // input
@@ -583,7 +610,7 @@ function gameFrame(){
   g.save();g.textAlign="center";g.textBaseline="middle";
   for(let i=G.embers.length-1;i>=0;i--){const e=G.embers[i];e.y+=e.v*dt/H;e.age=(e.age||0)+dt;const fade=Math.min(1,e.age/.6);e.x=cl(e.x+G.wind*dt*.12,.03,.97);const x=e.x*W+Math.sin(T*2+e.ph)*6,y=e.y*H;
     if(y>by-14&&y<by+18&&Math.abs(x-px)<bw/2){G.embers.splice(i,1);if(G.run)catchEmber(e,x,by);continue}
-    if(y>H+20){if(e.good&&!e.gold)G.combo=0,hud();G.embers.splice(i,1);continue}
+    if(y>H+20){if(e.good&&!e.gold){G.combo=0;if(G.run)G.stats[e.theme].fell++;hud()}G.embers.splice(i,1);continue}
     const col=e.gold?"#fff1b8":(e.good?cGood:cBad);
     g.globalCompositeOperation="lighter";g.globalAlpha=.9*fade;const r=e.gold?11:8;g.drawImage(GI,x-r*3,y-r*3,r*6,r*6);g.fillStyle=col;g.beginPath();g.arc(x,y,r*.55,0,TAU);g.fill();
     g.globalCompositeOperation="source-over";g.globalAlpha=fade;g.font=`500 ${innerWidth<640?15:18}px Cormorant, Georgia, serif`;g.fillStyle=e.gold?"#fff1b8":"#f6ede4";g.fillText(e.w,x,y-r-12)}
@@ -594,9 +621,9 @@ function gameFrame(){
   g.restore();
   // brazier + fire
   const shake=G.shake>0?(Math.random()-.5)*10*G.shake:0;G.shake=Math.max(0,G.shake-DT);
-  const fr=lerp(8,Math.min(70,H*.08),f01);if(G.fire>-5)flame(px+shake,by-6,fr,.25+.75*f01,G.breathing?.5:0,1);
+  const fr=lerp(14,Math.min(78,H*.09),f01)*(1+Math.min(.35,(G.level-1)*.05));if(G.fire>-5)flame(px+shake,by-6,fr,.25+.75*f01,G.breathing?.5:0,1);
   g.save();g.strokeStyle="#8a5a3c";g.fillStyle="rgba(40,22,14,.9)";g.lineWidth=2;g.beginPath();g.moveTo(px-bw/2+shake,by+2);g.quadraticCurveTo(px+shake,by+44,px+bw/2+shake,by+2);g.closePath();g.fill();g.stroke();g.beginPath();g.moveTo(px-bw*.18+shake,by+30);g.lineTo(px-bw*.26+shake,by+52);g.moveTo(px+bw*.18+shake,by+30);g.lineTo(px+bw*.26+shake,by+52);g.stroke();g.restore();
-  if(TINT.iri>.02){g.save();g.globalCompositeOperation="lighter";for(let k=0;k<22;k++){const t=(T*.45+k*.137)%1,a2=k*2.399+T*.6,rr=fr*(1.2+1.6*t);const x=px+Math.cos(a2)*rr*.7,y=by-6-fr*.4-t*fr*2.6+Math.sin(a2)*rr*.25;g.globalAlpha=TINT.iri*(1-t)*.9;g.fillStyle=hslHex(hsh(k*31)*360+T*6,1,.7);g.beginPath();g.arc(x,y,1.2+1.6*(1-t),0,TAU);g.fill()}g.restore()}
+  if(TINT.iri>.02){g.save();g.globalCompositeOperation="lighter";for(let k=0;k<22;k++){const t=(T*.45+k*.137)%1,a2=k*2.399+T*.6,rr=fr*(1.2+1.6*t);const x=px+Math.cos(a2)*rr*.7,y=by-6-fr*.4-t*fr*2.6+Math.sin(a2)*rr*.25;g.globalAlpha=TINT.iri*(1-t)*.9;g.fillStyle=hslHex(hsh(k*31)*360+T*2.5,1,.7);g.beginPath();g.arc(x,y,1.2+1.6*(1-t),0,TAU);g.fill()}g.restore()}
   // sparks
   g.save();g.globalCompositeOperation="lighter";for(let i=G.sparks.length-1;i>=0;i--){const s=G.sparks[i];s.life-=DT*1.3;if(s.life<=0){G.sparks.splice(i,1);continue}s.vy+=420*DT;s.x+=s.vx*DT;s.y+=s.vy*DT;g.globalAlpha=s.life;g.fillStyle=s.c==="#7d8fa6"?s.c:tc(s.c);g.fillRect(s.x-1.5,s.y-1.5,3,3)}g.restore();
   TINT=null;
