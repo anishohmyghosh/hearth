@@ -560,10 +560,11 @@ const same=(a,b)=>a&&b&&a.at===b.at&&a.name===b.name&&a.score===b.score;
 function allScores(){const out=[];[...(shared||[]),...cleanBoard(board)].forEach(r=>{if(!out.some(x=>same(x,r)))out.push(r)});return out.sort((a,b)=>b.score-a.score)}
 function boardNote(){return boardMode==="shared"?"Shared leaderboard: everyone, every device.":boardMode==="loading"?"Loading the shared leaderboard\u2026":"Couldn't reach the shared leaderboard. Showing scores saved in this browser."}
 function refreshBoards(){document.querySelectorAll(".boardnote").forEach(n=>n.textContent=boardNote());if(!gEl("gOver").classList.contains("hide"))renderBoard(gEl("gBoard"));if(!gEl("gScoresView").hidden)renderBoard(gEl("gBoardStart"))}
-const getJSON=()=>fetch(BOARD_URL,{cache:"no-store"}).then(r=>{if(!r.ok)throw 0;return r.json()});
+const withTimeout=(o={})=>{const c=new AbortController();setTimeout(()=>c.abort(),8000);return{...o,signal:c.signal}};
+const getJSON=()=>fetch(BOARD_URL,withTimeout({cache:"no-store"})).then(r=>{if(!r.ok)throw 0;return r.json()});
 let pulling=null;function pullBoard(){if(pulling)return pulling;pulling=getJSON().then(d=>{shared=cleanBoard(d&&d.board);boardMode="shared"}).catch(()=>{boardMode=shared?"shared":"offline"}).finally(()=>{pulling=null;refreshBoards()});return pulling}
 async function pushEntry(entry){for(let i=0;i<3;i++){try{const d=await getJSON();let l=cleanBoard(d&&d.board);if(!l.some(x=>same(x,entry)))l.push(entry);l.sort((a,b)=>b.score-a.score);l=l.slice(0,100);
-  const r=await fetch(BOARD_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({board:l})});if(!r.ok)throw 0;
+  const r=await fetch(BOARD_URL,withTimeout({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({board:l})}));if(!r.ok)throw 0;
   const v=cleanBoard((await getJSON()).board);if(v.some(x=>same(x,entry))||(v.length>=100&&entry.score<=v[v.length-1].score)){shared=v;boardMode="shared";refreshBoards();return true}}catch(e){}
   await new Promise(r=>setTimeout(r,500+Math.random()*700))}boardMode="offline";refreshBoards();return false}
 function renderBoard(list){const rows=allScores().slice(0,10);list.innerHTML="";if(!rows.length){list.innerHTML='<li><span class="rk">\u2014</span><span class="nm">No scores yet.</span><span></span><span></span></li>';return}
