@@ -1,0 +1,15 @@
+# The Hearth
+
+An interactive, fire-lit map of healed masculinity: **wildfire into hearth**. Same fire, held well, so it warms instead of burning.
+
+**Live:** https://anishohmyghosh.github.io/hearth/
+
+## What's inside
+
+- **The map.** Eight transformations around a central hearth: Suppression → Feeling, Isolation → Connection, Shame → Self-respect, Aggression → Protective strength, Control → Steadiness, Proving → Purpose, Armour → Embodiment, Fear of tenderness → Wholeness. Each opens a live wound-to-healed animation (auto-plays, or drag the slider), a placard with research, one practice and one affirmation, and numbered sources.
+- **The session.** About 7 minutes of guided breathing at ~6 breaths per minute, with one suggestion per breath: settling, a body scan, the eight affirmations, a future-self visualisation and a gentle return. Optional generated drone and fire-crackle audio.
+- **Sources.** 14 references, from the APA Guidelines for Psychological Practice with Boys and Men to research on emotion suppression, affect labelling, social connection, self-compassion and slow breathing.
+
+A single self-contained `index.html`, no build step, no dependencies beyond Google Fonts.
+
+> A reflective practice tool, not therapy. If something heavy comes up, talk to someone you trust or a professional.
