@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="An interactive, fire-lit map of healed masculinity with a guided breathing session and a word-catching game.">
+<meta name="description" content="An interactive, fire-lit map of healed masculinity with a guided meditation and a word-catching game.">
 <title>The Hearth</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,6 +40,8 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
 #centre h1{font-size:clamp(24px,3vw,36px);line-height:1.05;margin:6px 0}
 #centre p{margin:0;color:var(--dim);font-size:14px;text-wrap:balance}
 #centre>*{transition:opacity .25s}
+#centre.compact h1{font-size:24px;margin:4px 0}
+#centre.compact p{font-size:12.5px;line-height:1.4}
 #begin{left:50%;bottom:calc(30px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px}
 .fire-btn{border:1px solid rgba(255,196,107,.55);border-radius:999px;padding:12px 26px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);background:rgba(255,122,47,.08);box-shadow:0 0 30px rgba(255,122,47,.15);transition:background .3s,box-shadow .3s}
 .fire-btn:hover{background:rgba(255,122,47,.18);box-shadow:0 0 44px rgba(255,122,47,.3)}
@@ -130,6 +132,9 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
 .stats div{border:1px solid rgba(255,196,107,.18);border-radius:12px;padding:8px 6px}
 .stats small{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
 .stats b{font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--gold)}
+.namecard{margin:6px 0 4px;padding:14px 12px;border-radius:14px;border:1px solid rgba(255,196,107,.5);background:linear-gradient(180deg,rgba(255,122,47,.16),rgba(255,122,47,.05));box-shadow:0 0 30px rgba(255,122,47,.12)}
+.nc-h{font-family:var(--f-d);font-size:24px;color:var(--gold);margin-bottom:8px}
+.nc-s{font-size:12px;color:var(--dim);margin-top:8px}
 .nameform{display:flex;gap:8px;justify-content:center;margin-top:6px}
 .nameform input{width:min(220px,60vw);background:rgba(255,255,255,.04);border:1px solid rgba(255,196,107,.35);border-radius:999px;padding:10px 16px;text-align:center;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
 .nameform input:focus{outline:none;border-color:var(--gold)}
@@ -159,8 +164,8 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
   <nav class="nav"><button type="button" id="mapBtn" class="hide">Map</button><button type="button" id="srcBtn">Sources</button><button type="button" id="sndBtn" aria-pressed="false">Sound off</button></nav>
 </header>
 
-<div id="centre" class="ui"><div class="k" id="cK">healed masculinity</div><h1 id="cH">Wildfire into hearth</h1><p id="cP">Same fire, held well: it warms instead of burning. Hover a flame to read it. Click to enter.</p></div>
-<div id="begin" class="ui"><div class="row2"><button class="fire-btn" type="button" id="startBtn">Begin the session &#xb7; 7 min</button><button class="fire-btn" type="button" id="playBtn">Play &#xb7; Tend the Fire</button></div><div class="note">A guided practice, not therapy. If something heavy comes up, talk to someone you trust or a professional.</div></div>
+<div id="centre" class="ui"><div class="k" id="cK">healed masculinity</div><h1 id="cH">Wildfire into hearth</h1><p id="cP">Hover a flame to read it. Click to enter.</p></div>
+<div id="begin" class="ui"><div class="row2"><button class="fire-btn" type="button" id="startBtn">Meditation &#xb7; 7 min</button><button class="fire-btn" type="button" id="playBtn">Play &#xb7; Tend the Fire</button></div><div class="note">A guided practice, not therapy. If something heavy comes up, reach out to someone.</div></div>
 
 <section id="pair" class="ui hide" aria-live="polite">
   <div id="stageCtl"><div class="morph"><span>wound</span><input type="range" id="mix" min="0" max="1000" value="0" aria-label="Move from wound to healed"><span>healed</span></div><div class="k" id="mixHint">drag, or watch it heal</div></div>
@@ -179,7 +184,7 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
   <div id="gMeter" aria-hidden="true"><i id="gFill"></i><span style="top:2%">blaze +10</span><span style="top:50%">0</span><span style="top:98%">out &#x2212;10</span></div>
   <div id="gFloat"></div>
   <div id="gBreath"><button type="button" id="breathBtn">Hold &#xb7; Breathe</button><div class="bar"><i id="gBreathBar"></i></div></div>
-  <button class="ghost" type="button" id="gQuit">Leave game</button>
+  <button class="ghost" type="button" id="gQuit">End run</button>
   <div class="ov" id="gStart"><div class="box">
     <div class="k">a hearth game</div><h2>Tend the Fire</h2>
     <p>Words fall as embers. Catch the ones that feed a healthy fire; let the ones that smother it fall.</p>
@@ -195,9 +200,9 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
     <div id="gScoresView" hidden style="margin-top:14px"><div class="k" style="margin-bottom:8px">high scores</div><ol class="board" id="gBoardStart"></ol><div class="boardnote">Saved in this browser.</div></div>
   </div></div>
   <div class="ov hide" id="gLevelUp"><div class="box"><div class="k" id="luK">level cleared</div><h2 id="luH">Blaze</h2><p id="luP"></p><div class="row"><button class="fire-btn" type="button" id="luGo">Keep going</button></div></div></div>
-  <div class="ov hide" id="gOver"><div class="box"><div class="k">the fire went out</div><h2 id="goRank">Spark</h2><p id="goP"></p>
+  <div class="ov hide" id="gOver"><div class="box"><div class="k" id="goK">the fire went out</div><h2 id="goRank">Spark</h2><p id="goP"></p>
   <div class="stats"><div><small>Score</small><b id="goScore">0</b></div><div><small>Level</small><b id="goLevel">1</b></div><div><small>Best combo</small><b id="goCombo">0</b></div><div><small>Caught</small><b id="goCaught">0</b></div></div>
-  <form id="gNameForm" class="nameform"><input id="gNameIn" maxlength="10" placeholder="YOUR NAME" autocomplete="off" spellcheck="false" aria-label="Name for the leaderboard"><button class="fire-btn" id="gSave" type="submit">Enter</button></form>
+  <div class="namecard" id="gNameCard"><div class="nc-h" id="gNameH">Put your name on the board</div><form id="gNameForm" class="nameform"><input id="gNameIn" maxlength="10" placeholder="YOUR NAME" autocomplete="off" spellcheck="false" aria-label="Name for the leaderboard"><button class="fire-btn" id="gSave" type="submit">Save</button></form><div class="nc-s" id="gNameS">Up to 10 letters. Press Enter to save.</div></div>
   <div class="k" style="margin:14px 0 8px">high scores</div><ol class="board" id="gBoard"></ol><div class="boardnote">Saved in this browser.</div>
   <div class="recap" id="goRecap"></div>
   <div class="row"><button class="fire-btn" type="button" id="goAgain">Rekindle</button><button class="ghost" type="button" id="goBack">Back to the Hearth</button></div></div></div>
@@ -296,8 +301,8 @@ const cv=document.getElementById("cv"),g=cv.getContext("2d");
 let W=0,H=0,DPR=1,T=0,last=performance.now(),DPRMAX=Math.min(1.75,devicePixelRatio||1),ema=1/60,slowFor=0;
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 function placeCentre(){const R=Math.min(innerWidth*.38,(innerHeight-260)*.44),c=document.getElementById('centre');if(c){c.style.top=(innerHeight/2-24+Math.min(R*.16,56)*.9+14)+'px'}}
-function resize(){placeCentre();DPR=DPRMAX;W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR}
-addEventListener("resize",resize);resize();
+function resize(){DPR=DPRMAX;W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR}
+addEventListener("resize",()=>{resize();measure()});resize();
 const GLOW=(()=>{const c=document.createElement("canvas");c.width=c.height=256;const x=c.getContext("2d"),gr=x.createRadialGradient(128,128,0,128,128,128);gr.addColorStop(0,"rgba(255,150,70,1)");gr.addColorStop(.35,"rgba(255,110,45,.45)");gr.addColorStop(1,"rgba(255,90,30,0)");x.fillStyle=gr;x.fillRect(0,0,256,256);return c})();
 const TAU=Math.PI*2,ss=x=>{x=Math.max(0,Math.min(1,x));return x*x*(3-2*x)},lerp=(a,b,u)=>a+(b-a)*u,cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
 const hsh=i=>{const x=Math.sin(i*12.9898+78.233)*43758.5453;return x-Math.floor(x)};
@@ -342,7 +347,10 @@ function glyph(id,cx,cy,R,h){g.save();g.globalCompositeOperation="lighter";g.lin
 /* ===== state ===== */
 let level="map",hov=-1,cur=0,zoom=0,zoomT=0,sz=0,szT=0,from=[0,0],mix=0,mixAuto=true;
 const hv=P.map(()=>0);
-function ringGeom(){const cx=W/2,cy=H/2-24,R=Math.min(W*.38,(H-260)*.44);return{cx,cy,R}}
+let GEO={cx:0,cy:0,R:100};
+function measure(){const b=document.getElementById("begin"),bt=b?b.getBoundingClientRect().top:innerHeight-120,top=72+52,bottom=bt-62-24;const R=Math.max(90,Math.min(innerWidth*.36,(bottom-top)/2));GEO={cx:innerWidth/2,cy:(top+bottom)/2,R};const c=document.getElementById("centre");if(c){c.style.top=(GEO.cy-GEO.R*.02+Math.min(GEO.R*.16,56)*.9+10)+"px";c.style.width=Math.max(170,Math.min(300,R*1.0))+"px";c.classList.toggle("compact",R<260)}}
+function ringGeom(){return GEO}
+measure();if(document.fonts)document.fonts.ready.then(measure);
 function nodes(){const{cx,cy,R}=ringGeom();return P.map((_,i)=>{const a=-Math.PI/2+i/P.length*TAU;return[cx+Math.cos(a)*R,cy+Math.sin(a)*R,a]})}
 
 let DT=1/60;
@@ -403,7 +411,7 @@ function toMap(){if(level==="session")endSession();if(level==="game"){closeGame(
 $("#mix").addEventListener("input",e=>{mixAuto=false;mix=+e.target.value/1000;$("#mixHint").textContent=mix>.95?"healed":"you're moving it"});
 $("#mapBtn").onclick=toMap;
 let ctT=null;function setCentre(k,h,p){[$("#cK"),$("#cH"),$("#cP")].forEach(e=>e.style.opacity=0);clearTimeout(ctT);ctT=setTimeout(()=>{$("#cK").textContent=k;$("#cH").textContent=h;$("#cP").textContent=p;[$("#cK"),$("#cH"),$("#cP")].forEach(e=>e.style.opacity=1)},160)}
-function resetCentre(){setCentre("healed masculinity","Wildfire into hearth","Same fire, held well: it warms instead of burning. Hover a flame to read it. Click to enter.")}
+function resetCentre(){setCentre("healed masculinity","Wildfire into hearth","Hover a flame to read it. Click to enter.")}
 function pick(x,y){const N=nodes();let b=-1,bd=44;N.forEach((p,i)=>{const d=Math.hypot(p[0]-x,p[1]-y);if(d<bd){bd=d;b=i}});return b}
 cv.addEventListener("pointermove",e=>{if(level!=="map")return;const i=pick(e.clientX,e.clientY);if(i!==hov){hov=i;cv.style.cursor=i>=0?"pointer":"default";if(i>=0)setCentre(P[i].from+" \u2192 "+P[i].to,P[i].to,P[i].line);else resetCentre()}});
 cv.addEventListener("click",e=>{if(level!=="map")return;const i=pick(e.clientX,e.clientY);if(i>=0)openPair(i)});
@@ -456,7 +464,7 @@ const THEMES=Object.keys(WORDS);
 const G={on:false,run:false,fire:0,score:0,level:1,combo:0,best:0,px:.5,vx:0,embers:[],drops:[],sparks:[],prompt:"feel",ptime:0,plen:16,spawn:0,breath:1,breathing:false,wind:0,windT:0,keys:{},caughtBad:[],sound:true,shake:0};
 try{G.best=+localStorage.getItem("hearth:best")||0}catch(e){}
 const gEl=id=>document.getElementById(id);
-function lvl(){const n=G.level,r=Math.min(1,(G.el||0)/120);return{fall:46+9*(n-1)+30*r,every:Math.max(.8,2.2-.2*(n-1)-.8*r),maxOn:Math.min(8,3+Math.floor((n-1)*.8+r*2)),plen:Math.max(9,30-3*(n-1)-10*r),hint:n<=2?1-(n-1)*.5:0,wind:n>=4,rain:n>=5}}
+function lvl(){const n=G.level,r=Math.min(1,(G.el||0)/120);return{fall:66+10*(n-1)+34*r,every:Math.max(.7,1.65-.15*(n-1)-.6*r),maxOn:Math.min(8,4+Math.floor((n-1)*.8+r*2)),plen:Math.max(9,30-3*(n-1)-10*r),hint:n<=2?1-(n-1)*.5:0,wind:n>=4,rain:n>=5}}
 function setPrompt(t){G.prompt=t;G.ptime=0;G.plen=lvl().plen;const p=P.find(x=>x.id===t);const el=gEl("gPrompt");el.classList.add("flip");setTimeout(()=>{el.textContent=p.to;gEl("gSub").textContent=`${p.from} \u2192 ${p.to} \u00b7 matching words count double`;el.classList.remove("flip")},300)}
 function newPrompt(){let t;do{t=THEMES[(Math.random()*THEMES.length)|0]}while(t===G.prompt&&THEMES.length>1);setPrompt(t)}
 function spawnEmber(){const L=lvl(),theme=Math.random()<.45?G.prompt:THEMES[(Math.random()*THEMES.length)|0],good=Math.random()<.55,onScreen=new Set(G.embers.map(e=>e.w)),pool=WORDS[theme][good?"good":"bad"],list=pool.filter(w=>!onScreen.has(w)).length?pool.filter(w=>!onScreen.has(w)):pool,gold=Math.random()<.035;
@@ -483,11 +491,13 @@ function catchEmber(e,bx,by){
   hud();
   if(G.fire>=10)levelUp();else if(G.fire<=-10)gameOver()}
 function levelUp(){G.run=false;gSound("win");const p=P.find(x=>x.id===G.prompt);gEl("luK").textContent=`level ${G.level} cleared`;gEl("luH").textContent="Blaze";gEl("luP").textContent=`\u201c${p.aff}\u201d Next level: a little faster${G.level+1===3?", and the embers stop giving hints":G.level+1===4?", and the wind picks up":G.level+1===5?", and cold rain starts to fall (dodge it)":""}.`;gEl("gLevelUp").classList.remove("hide")}
-function gameOver(){G.run=false;gSound("out");if(G.score>G.best){G.best=G.score;try{localStorage.setItem("hearth:best",String(Math.round(G.best)))}catch(e){}}
+function gameOver(banked){G.run=false;gSound(banked?"win":"out");gEl("goK").textContent=banked?"you banked the fire":"the fire went out";if(G.score>G.best){G.best=G.score;try{localStorage.setItem("hearth:best",String(Math.round(G.best)))}catch(e){}}
   const rank=RANKS[Math.min(RANKS.length-1,G.level-1)];gEl("goRank").textContent=rank;
   gEl("goScore").textContent=Math.round(G.score);gEl("goLevel").textContent=G.level;gEl("goCombo").textContent=G.bestCombo;gEl("goCaught").textContent=G.goodN;
   gEl("goP").textContent=(G.score>=G.best&&G.score>0?"New best. ":"")+"Every hearth has nights like this, and every fire can be rekindled.";
-  lastEntry=null;gEl("gNameIn").disabled=false;gEl("gSave").disabled=G.score<=0;gEl("gNameIn").value="";renderBoard(gEl("gBoard"));setTimeout(()=>{if(G.score>0)gEl("gNameIn").focus()},300);
+  lastEntry=null;const ok=G.score>0;gEl("gNameIn").disabled=!ok;gEl("gSave").disabled=!ok;gEl("gNameIn").value="";gEl("gNameForm").hidden=!ok;
+  const place=board.filter(r=>r.score>Math.round(G.score)).length+1;gEl("gNameH").textContent=ok?(place<=10?`#${place} on the board. Put your name on it`:"Put your name on the board"):"No points this time";gEl("gNameS").textContent=ok?"Up to 10 letters. Press Enter to save.":"Catch a few healing words to make the board.";
+  renderBoard(gEl("gBoard"));gEl("gOver").querySelector(".box").scrollTop=0;setTimeout(()=>{if(ok)gEl("gNameIn").focus()},350);
   const seen=new Set(),rows=G.caughtBad.filter(e=>!seen.has(e.w)&&seen.add(e.w)).slice(-8).map(e=>{const k=WORDS[e.theme].bad.indexOf(e.w),h=WORDS[e.theme].good[k]||WORDS[e.theme].good[0];return`<div><span class="w">${e.w}</span><span style="color:var(--dim)">\u2192</span><span class="h">${h}</span></div>`});
   gEl("goRecap").innerHTML=rows.length?`<div class="k" style="margin-bottom:4px">what smothered it, and what heals it</div>${rows.join("")}`:"";gEl("gOver").classList.remove("hide");hud()}
 function gameFrame(){
@@ -532,7 +542,7 @@ function renderBoard(list){const rows=board.slice(0,10);list.innerHTML="";if(!ro
   rows.forEach((r,i)=>{const li=document.createElement("li");if(r===lastEntry)li.className="me";const a=document.createElement("span");a.className="rk";a.textContent=String(i+1).padStart(2,"0");const b=document.createElement("span");b.className="nm";b.textContent=r.name;const c=document.createElement("span");c.className="md";c.textContent=(RANKS[Math.min(RANKS.length-1,(r.level||1)-1)])+" \u00b7 LV "+(r.level||1);const d=document.createElement("span");d.className="sc";d.textContent=r.score;li.append(a,b,c,d);list.append(li)})}
 gEl("gNameIn").addEventListener("input",e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9 ._-]/g,"")});
 gEl("gNameIn").addEventListener("keydown",e=>e.stopPropagation());
-gEl("gNameForm").addEventListener("submit",e=>{e.preventDefault();if(G.score<=0)return;const name=(gEl("gNameIn").value.trim()||"FIREKEEPER").slice(0,10);gEl("gSave").disabled=true;gEl("gNameIn").disabled=true;gEl("gNameIn").blur();
+gEl("gNameForm").addEventListener("submit",e=>{e.preventDefault();if(G.score<=0)return;const name=(gEl("gNameIn").value.trim()||"FIREKEEPER").slice(0,10);gEl("gSave").disabled=true;gEl("gNameIn").disabled=true;gEl("gNameIn").blur();gEl("gNameH").textContent="Saved. Your name is on the board";gEl("gNameS").textContent="";
   const entry={name,score:Math.round(G.score),level:G.level,at:Date.now()};lastEntry=entry;board.push(entry);board.sort((a,b)=>b.score-a.score);board=board.slice(0,25);try{localStorage.setItem("hearth:board",JSON.stringify(board))}catch(err){}renderBoard(gEl("gBoard"))});
 gEl("gScoresBtn").onclick=()=>{const v=gEl("gScoresView");v.hidden=!v.hidden;if(!v.hidden)renderBoard(gEl("gBoardStart"))};
 /* play counter (abacus.jasoncameron.dev, free and keyless); silently absent where blocked */
@@ -542,7 +552,7 @@ function countPlay(){try{fetch(COUNTER.replace("%s","hit")).then(r=>r.json()).th
 try{fetch(COUNTER.replace("%s","get")).then(r=>r.json()).then(d=>showPlays(d.value)).catch(()=>{})}catch(e){}
 function openGame(){level="game";show("#centre",false);show("#begin",false);show("#pair",false);show("#game",true);$("#mapBtn").classList.remove("hide");gEl("gStart").classList.remove("hide");gEl("gOver").classList.add("hide");gEl("gLevelUp").classList.add("hide");gameReset();G.run=false}
 function closeGame(){G.run=false;show("#game",false);level="map";zoomT=0;szT=0;show("#centre",true);show("#begin",true);$("#mapBtn").classList.add("hide");resetCentre()}
-gEl("playBtn").onclick=openGame;gEl("gQuit").onclick=closeGame;gEl("goBack").onclick=closeGame;
+gEl("playBtn").onclick=openGame;gEl("gQuit").onclick=()=>{if(G.run&&G.score>0){gameOver(true)}else closeGame()};gEl("goBack").onclick=closeGame;
 gEl("gGo").onclick=()=>{gEl("gStart").classList.add("hide");gameReset();G.run=true;countPlay()};
 gEl("goAgain").onclick=()=>{gEl("gOver").classList.add("hide");gameReset();G.run=true;countPlay()};
 gEl("luGo").onclick=()=>{gEl("gLevelUp").classList.add("hide");G.level++;G.fire=2;G.el=0;G.spawn=.5;G.embers=[];G.drops=[];newPrompt();hud();G.run=true};
