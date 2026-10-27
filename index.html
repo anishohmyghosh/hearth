@@ -126,6 +126,24 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
 .recap div{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
 .recap .w{color:#ff8a5c;font-style:italic;font-family:var(--f-d);font-size:17px}
 .recap .h{color:var(--gold);font-family:var(--f-d);font-size:17px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+.stats div{border:1px solid rgba(255,196,107,.18);border-radius:12px;padding:8px 6px}
+.stats small{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.stats b{font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--gold)}
+.nameform{display:flex;gap:8px;justify-content:center;margin-top:6px}
+.nameform input{width:min(220px,60vw);background:rgba(255,255,255,.04);border:1px solid rgba(255,196,107,.35);border-radius:999px;padding:10px 16px;text-align:center;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+.nameform input:focus{outline:none;border-color:var(--gold)}
+.nameform .fire-btn{padding:10px 18px}
+.board{list-style:none;margin:0;padding:0;display:grid;gap:4px;text-align:left}
+.board li{display:grid;grid-template-columns:32px minmax(0,1fr) auto 64px;gap:10px;align-items:baseline;padding:6px 10px;border-radius:10px;background:rgba(255,255,255,.03);font-variant-numeric:tabular-nums}
+.board li.me{background:rgba(255,122,47,.16);border:1px solid rgba(255,196,107,.35)}
+.board .rk{color:var(--dim);font-size:12px}
+.board .nm{letter-spacing:.12em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.board .md{font-size:11px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase}
+.board .sc{text-align:right;color:var(--gold);font-weight:600}
+.boardnote{font-size:11px;color:var(--dim);margin-top:6px;letter-spacing:.06em}
+.plays{font-size:11px;letter-spacing:.2em;color:var(--dim);margin-top:12px;text-transform:uppercase}
+@media (max-width:520px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 #playBtn{border-color:rgba(159,198,255,.5);color:var(--cool);background:rgba(159,198,255,.06);box-shadow:none}
 #playBtn:hover{background:rgba(159,198,255,.14)}
 #begin .row2{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
@@ -172,10 +190,17 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
       <div><span>Breathe</span> &nbsp;hold Space (or the button) to slow time. It drains, then refills.</div>
       <div><span>Win &#xb7; lose</span> &nbsp;reach +10 to blaze into the next level. At &#x2212;10 the fire goes out.</div>
     </div>
-    <div class="row"><button class="fire-btn" type="button" id="gGo">Light it</button><button class="ghost" type="button" id="gSnd" aria-pressed="true">Game sound on</button></div>
+    <div class="row"><button class="fire-btn" type="button" id="gGo">Light it</button><button class="ghost" type="button" id="gScoresBtn">High scores</button><button class="ghost" type="button" id="gSnd" aria-pressed="true">Game sound on</button></div>
+    <div class="plays" id="gPlays" hidden></div>
+    <div id="gScoresView" hidden style="margin-top:14px"><div class="k" style="margin-bottom:8px">high scores</div><ol class="board" id="gBoardStart"></ol><div class="boardnote">Saved in this browser.</div></div>
   </div></div>
   <div class="ov hide" id="gLevelUp"><div class="box"><div class="k" id="luK">level cleared</div><h2 id="luH">Blaze</h2><p id="luP"></p><div class="row"><button class="fire-btn" type="button" id="luGo">Keep going</button></div></div></div>
-  <div class="ov hide" id="gOver"><div class="box"><div class="k">the fire went out</div><h2 id="goH">Embers remain</h2><p id="goP"></p><div class="recap" id="goRecap"></div><div class="row"><button class="fire-btn" type="button" id="goAgain">Rekindle</button><button class="ghost" type="button" id="goBack">Back to the Hearth</button></div></div></div>
+  <div class="ov hide" id="gOver"><div class="box"><div class="k">the fire went out</div><h2 id="goRank">Spark</h2><p id="goP"></p>
+  <div class="stats"><div><small>Score</small><b id="goScore">0</b></div><div><small>Level</small><b id="goLevel">1</b></div><div><small>Best combo</small><b id="goCombo">0</b></div><div><small>Caught</small><b id="goCaught">0</b></div></div>
+  <form id="gNameForm" class="nameform"><input id="gNameIn" maxlength="10" placeholder="YOUR NAME" autocomplete="off" spellcheck="false" aria-label="Name for the leaderboard"><button class="fire-btn" id="gSave" type="submit">Enter</button></form>
+  <div class="k" style="margin:14px 0 8px">high scores</div><ol class="board" id="gBoard"></ol><div class="boardnote">Saved in this browser.</div>
+  <div class="recap" id="goRecap"></div>
+  <div class="row"><button class="fire-btn" type="button" id="goAgain">Rekindle</button><button class="ghost" type="button" id="goBack">Back to the Hearth</button></div></div></div>
 </section>
 
 <aside id="drawer" aria-label="Sources"><button class="ghost" type="button" id="drawerX" style="float:right">Close</button><h3>Sources</h3><ol id="refList"></ol>
@@ -431,12 +456,12 @@ const THEMES=Object.keys(WORDS);
 const G={on:false,run:false,fire:0,score:0,level:1,combo:0,best:0,px:.5,vx:0,embers:[],drops:[],sparks:[],prompt:"feel",ptime:0,plen:16,spawn:0,breath:1,breathing:false,wind:0,windT:0,keys:{},caughtBad:[],sound:true,shake:0};
 try{G.best=+localStorage.getItem("hearth:best")||0}catch(e){}
 const gEl=id=>document.getElementById(id);
-function lvl(){const n=G.level,r=Math.min(1,(G.el||0)/120);return{fall:38+9*(n-1)+30*r,every:Math.max(.8,2.6-.2*(n-1)-.9*r),maxOn:Math.min(8,3+Math.floor((n-1)*.8+r*2)),plen:Math.max(9,18-n),hint:n<=2?1-(n-1)*.5:0,wind:n>=4,rain:n>=5}}
+function lvl(){const n=G.level,r=Math.min(1,(G.el||0)/120);return{fall:46+9*(n-1)+30*r,every:Math.max(.8,2.2-.2*(n-1)-.8*r),maxOn:Math.min(8,3+Math.floor((n-1)*.8+r*2)),plen:Math.max(9,30-3*(n-1)-10*r),hint:n<=2?1-(n-1)*.5:0,wind:n>=4,rain:n>=5}}
 function setPrompt(t){G.prompt=t;G.ptime=0;G.plen=lvl().plen;const p=P.find(x=>x.id===t);const el=gEl("gPrompt");el.classList.add("flip");setTimeout(()=>{el.textContent=p.to;gEl("gSub").textContent=`${p.from} \u2192 ${p.to} \u00b7 matching words count double`;el.classList.remove("flip")},300)}
 function newPrompt(){let t;do{t=THEMES[(Math.random()*THEMES.length)|0]}while(t===G.prompt&&THEMES.length>1);setPrompt(t)}
 function spawnEmber(){const L=lvl(),theme=Math.random()<.45?G.prompt:THEMES[(Math.random()*THEMES.length)|0],good=Math.random()<.55,onScreen=new Set(G.embers.map(e=>e.w)),pool=WORDS[theme][good?"good":"bad"],list=pool.filter(w=>!onScreen.has(w)).length?pool.filter(w=>!onScreen.has(w)):pool,gold=Math.random()<.035;
   G.embers.push({x:.08+Math.random()*.84,y:-.04,v:L.fall*(.8+Math.random()*.45),w:gold?"hearthstone":list[(Math.random()*list.length)|0],good:gold||good,theme,gold,ph:Math.random()*TAU,i:list.indexOf(list[0])})}
-function gameReset(){Object.assign(G,{el:0,fire:0,score:0,level:1,combo:0,embers:[],drops:[],sparks:[],spawn:.4,breath:1,wind:0,windT:0,caughtBad:[],shake:0,px:.5});newPrompt();hud()}
+function gameReset(){Object.assign(G,{goodN:0,badN:0,bestCombo:0,el:0,fire:0,score:0,level:1,combo:0,embers:[],drops:[],sparks:[],spawn:.4,breath:1,wind:0,windT:0,caughtBad:[],shake:0,px:.5});newPrompt();hud()}
 function hud(){gEl("gScore").textContent=Math.round(G.score);gEl("gLevel").textContent=G.level;gEl("gCombo").textContent="\u00d7"+(1+Math.floor(G.combo/4));gEl("gBest").textContent=Math.round(G.best);gEl("gFill").style.height=`calc(${(G.fire+10)/20*100}% - 4px)`}
 function floatWord(txt,x,y,col){const d=document.createElement("div");d.className="fw";d.textContent=txt;d.style.left=x+"px";d.style.top=y+"px";d.style.color=col;gEl("gFloat").appendChild(d);setTimeout(()=>d.remove(),1150)}
 /* sound */
@@ -449,8 +474,9 @@ let GA=null;function gSound(type,k=0){if(!G.sound)return;try{GA=GA||new (window.
 function catchEmber(e,bx,by){
   const match=e.theme===G.prompt;let d;
   if(e.gold){d=3;G.combo+=2}
-  else if(e.good){d=match?2:1;G.combo++}
-  else{d=match?-3:-2;G.combo=0;G.caughtBad.push(e);G.shake=.35}
+  else if(e.good){d=match?2:1;G.combo++;G.goodN++}
+  else{d=match?-3:-2;G.combo=0;G.badN++;G.caughtBad.push(e);G.shake=.35}
+  G.bestCombo=Math.max(G.bestCombo,G.combo);
   G.fire=cl(G.fire+d,-10,10);const mult=1+Math.floor(G.combo/4);if(d>0)G.score+=d*10*mult;
   floatWord((d>0?"+":"")+d+"  "+e.w,bx,by-40,d>0?"#ffc46b":"#8fb3d9");gSound(d>0?"good":"bad",G.combo);
   for(let k=0;k<(d>0?14:8);k++)G.sparks.push({x:bx,y:by-20,vx:(Math.random()-.5)*220,vy:-Math.random()*260-40,life:1,c:d>0?"#ffc46b":"#7d8fa6"});
@@ -458,7 +484,10 @@ function catchEmber(e,bx,by){
   if(G.fire>=10)levelUp();else if(G.fire<=-10)gameOver()}
 function levelUp(){G.run=false;gSound("win");const p=P.find(x=>x.id===G.prompt);gEl("luK").textContent=`level ${G.level} cleared`;gEl("luH").textContent="Blaze";gEl("luP").textContent=`\u201c${p.aff}\u201d Next level: a little faster${G.level+1===3?", and the embers stop giving hints":G.level+1===4?", and the wind picks up":G.level+1===5?", and cold rain starts to fall (dodge it)":""}.`;gEl("gLevelUp").classList.remove("hide")}
 function gameOver(){G.run=false;gSound("out");if(G.score>G.best){G.best=G.score;try{localStorage.setItem("hearth:best",String(Math.round(G.best)))}catch(e){}}
-  gEl("goH").textContent=`Score ${Math.round(G.score)}`;gEl("goP").textContent=G.score>=G.best&&G.score>0?"New best. Every hearth has nights like this, and every fire can be rekindled.":"Every hearth has nights like this, and every fire can be rekindled.";
+  const rank=RANKS[Math.min(RANKS.length-1,G.level-1)];gEl("goRank").textContent=rank;
+  gEl("goScore").textContent=Math.round(G.score);gEl("goLevel").textContent=G.level;gEl("goCombo").textContent=G.bestCombo;gEl("goCaught").textContent=G.goodN;
+  gEl("goP").textContent=(G.score>=G.best&&G.score>0?"New best. ":"")+"Every hearth has nights like this, and every fire can be rekindled.";
+  lastEntry=null;gEl("gNameIn").disabled=false;gEl("gSave").disabled=G.score<=0;gEl("gNameIn").value="";renderBoard(gEl("gBoard"));setTimeout(()=>{if(G.score>0)gEl("gNameIn").focus()},300);
   const seen=new Set(),rows=G.caughtBad.filter(e=>!seen.has(e.w)&&seen.add(e.w)).slice(-8).map(e=>{const k=WORDS[e.theme].bad.indexOf(e.w),h=WORDS[e.theme].good[k]||WORDS[e.theme].good[0];return`<div><span class="w">${e.w}</span><span style="color:var(--dim)">\u2192</span><span class="h">${h}</span></div>`});
   gEl("goRecap").innerHTML=rows.length?`<div class="k" style="margin-bottom:4px">what smothered it, and what heals it</div>${rows.join("")}`:"";gEl("gOver").classList.remove("hide");hud()}
 function gameFrame(){
@@ -497,14 +526,28 @@ function gameFrame(){
   // breathing vignette
   if(G.breathing){g.save();g.globalAlpha=.18;g.fillStyle="#9fc6ff";g.fillRect(0,0,W,H);g.restore()}
 }
+const RANKS=["Spark","Kindler","Ember Tender","Firekeeper","Hearthwarden","Flamebearer","Keeper of the Hearth"];
+let board=[],lastEntry=null;try{board=JSON.parse(localStorage.getItem("hearth:board")||"[]")}catch(e){board=[]}
+function renderBoard(list){const rows=board.slice(0,10);list.innerHTML="";if(!rows.length){list.innerHTML='<li><span class="rk">\u2014</span><span class="nm">No scores yet. Be the first to keep the fire.</span><span></span><span></span></li>';return}
+  rows.forEach((r,i)=>{const li=document.createElement("li");if(r===lastEntry)li.className="me";const a=document.createElement("span");a.className="rk";a.textContent=String(i+1).padStart(2,"0");const b=document.createElement("span");b.className="nm";b.textContent=r.name;const c=document.createElement("span");c.className="md";c.textContent=(RANKS[Math.min(RANKS.length-1,(r.level||1)-1)])+" \u00b7 LV "+(r.level||1);const d=document.createElement("span");d.className="sc";d.textContent=r.score;li.append(a,b,c,d);list.append(li)})}
+gEl("gNameIn").addEventListener("input",e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9 ._-]/g,"")});
+gEl("gNameIn").addEventListener("keydown",e=>e.stopPropagation());
+gEl("gNameForm").addEventListener("submit",e=>{e.preventDefault();if(G.score<=0)return;const name=(gEl("gNameIn").value.trim()||"FIREKEEPER").slice(0,10);gEl("gSave").disabled=true;gEl("gNameIn").disabled=true;gEl("gNameIn").blur();
+  const entry={name,score:Math.round(G.score),level:G.level,at:Date.now()};lastEntry=entry;board.push(entry);board.sort((a,b)=>b.score-a.score);board=board.slice(0,25);try{localStorage.setItem("hearth:board",JSON.stringify(board))}catch(err){}renderBoard(gEl("gBoard"))});
+gEl("gScoresBtn").onclick=()=>{const v=gEl("gScoresView");v.hidden=!v.hidden;if(!v.hidden)renderBoard(gEl("gBoardStart"))};
+/* play counter (abacus.jasoncameron.dev, free and keyless); silently absent where blocked */
+const COUNTER="https://abacus.jasoncameron.dev/%s/anishohmyghosh-hearth/plays";
+function showPlays(v){if(typeof v!=="number")return;gEl("gPlays").textContent=v.toLocaleString()+(v===1?" fire tended":" fires tended")+" so far";gEl("gPlays").hidden=false}
+function countPlay(){try{fetch(COUNTER.replace("%s","hit")).then(r=>r.json()).then(d=>showPlays(d.value)).catch(()=>{})}catch(e){}}
+try{fetch(COUNTER.replace("%s","get")).then(r=>r.json()).then(d=>showPlays(d.value)).catch(()=>{})}catch(e){}
 function openGame(){level="game";show("#centre",false);show("#begin",false);show("#pair",false);show("#game",true);$("#mapBtn").classList.remove("hide");gEl("gStart").classList.remove("hide");gEl("gOver").classList.add("hide");gEl("gLevelUp").classList.add("hide");gameReset();G.run=false}
 function closeGame(){G.run=false;show("#game",false);level="map";zoomT=0;szT=0;show("#centre",true);show("#begin",true);$("#mapBtn").classList.add("hide");resetCentre()}
 gEl("playBtn").onclick=openGame;gEl("gQuit").onclick=closeGame;gEl("goBack").onclick=closeGame;
-gEl("gGo").onclick=()=>{gEl("gStart").classList.add("hide");gameReset();G.run=true};
-gEl("goAgain").onclick=()=>{gEl("gOver").classList.add("hide");gameReset();G.run=true};
+gEl("gGo").onclick=()=>{gEl("gStart").classList.add("hide");gameReset();G.run=true;countPlay()};
+gEl("goAgain").onclick=()=>{gEl("gOver").classList.add("hide");gameReset();G.run=true;countPlay()};
 gEl("luGo").onclick=()=>{gEl("gLevelUp").classList.add("hide");G.level++;G.fire=2;G.el=0;G.spawn=.5;G.embers=[];G.drops=[];newPrompt();hud();G.run=true};
 gEl("gSnd").onclick=()=>{G.sound=!G.sound;gEl("gSnd").setAttribute("aria-pressed",G.sound);gEl("gSnd").textContent=G.sound?"Game sound on":"Game sound off"};
-addEventListener("keydown",e=>{if(level!=="game")return;const k=e.key.length===1?e.key.toLowerCase():e.key;G.keys[k]=true;if(e.key===" "){e.preventDefault();G.breathing=true}if(["ArrowLeft","ArrowRight"].includes(e.key))e.preventDefault()});
+addEventListener("keydown",e=>{if(level!=="game"||e.target.tagName==="INPUT")return;const k=e.key.length===1?e.key.toLowerCase():e.key;G.keys[k]=true;if(e.key===" "){e.preventDefault();G.breathing=true}if(["ArrowLeft","ArrowRight"].includes(e.key))e.preventDefault()});
 addEventListener("keyup",e=>{const k=e.key.length===1?e.key.toLowerCase():e.key;G.keys[k]=false;if(e.key===" ")G.breathing=false});
 const bb=gEl("breathBtn");bb.addEventListener("pointerdown",e=>{e.preventDefault();G.breathing=true});["pointerup","pointerleave","pointercancel"].forEach(t=>bb.addEventListener(t,()=>G.breathing=false));
 cv.addEventListener("pointerdown",e=>{if(level==="game"){G.drag=true;G.px=cl(e.clientX/W,.04,.96)}});
