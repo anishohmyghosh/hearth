@@ -431,12 +431,12 @@ const THEMES=Object.keys(WORDS);
 const G={on:false,run:false,fire:0,score:0,level:1,combo:0,best:0,px:.5,vx:0,embers:[],drops:[],sparks:[],prompt:"feel",ptime:0,plen:16,spawn:0,breath:1,breathing:false,wind:0,windT:0,keys:{},caughtBad:[],sound:true,shake:0};
 try{G.best=+localStorage.getItem("hearth:best")||0}catch(e){}
 const gEl=id=>document.getElementById(id);
-function lvl(){const n=G.level;return{fall:85+22*n,every:Math.max(.42,1.05-.08*n),plen:Math.max(8,17-n),hint:n<=2?1-(n-1)*.5:0,wind:n>=4,rain:n>=5}}
+function lvl(){const n=G.level,r=Math.min(1,(G.el||0)/120);return{fall:38+9*(n-1)+30*r,every:Math.max(.8,2.6-.2*(n-1)-.9*r),maxOn:Math.min(8,3+Math.floor((n-1)*.8+r*2)),plen:Math.max(9,18-n),hint:n<=2?1-(n-1)*.5:0,wind:n>=4,rain:n>=5}}
 function setPrompt(t){G.prompt=t;G.ptime=0;G.plen=lvl().plen;const p=P.find(x=>x.id===t);const el=gEl("gPrompt");el.classList.add("flip");setTimeout(()=>{el.textContent=p.to;gEl("gSub").textContent=`${p.from} \u2192 ${p.to} \u00b7 matching words count double`;el.classList.remove("flip")},300)}
 function newPrompt(){let t;do{t=THEMES[(Math.random()*THEMES.length)|0]}while(t===G.prompt&&THEMES.length>1);setPrompt(t)}
 function spawnEmber(){const L=lvl(),theme=Math.random()<.45?G.prompt:THEMES[(Math.random()*THEMES.length)|0],good=Math.random()<.55,onScreen=new Set(G.embers.map(e=>e.w)),pool=WORDS[theme][good?"good":"bad"],list=pool.filter(w=>!onScreen.has(w)).length?pool.filter(w=>!onScreen.has(w)):pool,gold=Math.random()<.035;
   G.embers.push({x:.08+Math.random()*.84,y:-.04,v:L.fall*(.8+Math.random()*.45),w:gold?"hearthstone":list[(Math.random()*list.length)|0],good:gold||good,theme,gold,ph:Math.random()*TAU,i:list.indexOf(list[0])})}
-function gameReset(){Object.assign(G,{fire:0,score:0,level:1,combo:0,embers:[],drops:[],sparks:[],spawn:.6,breath:1,wind:0,windT:0,caughtBad:[],shake:0,px:.5});newPrompt();hud()}
+function gameReset(){Object.assign(G,{el:0,fire:0,score:0,level:1,combo:0,embers:[],drops:[],sparks:[],spawn:.4,breath:1,wind:0,windT:0,caughtBad:[],shake:0,px:.5});newPrompt();hud()}
 function hud(){gEl("gScore").textContent=Math.round(G.score);gEl("gLevel").textContent=G.level;gEl("gCombo").textContent="\u00d7"+(1+Math.floor(G.combo/4));gEl("gBest").textContent=Math.round(G.best);gEl("gFill").style.height=`calc(${(G.fire+10)/20*100}% - 4px)`}
 function floatWord(txt,x,y,col){const d=document.createElement("div");d.className="fw";d.textContent=txt;d.style.left=x+"px";d.style.top=y+"px";d.style.color=col;gEl("gFloat").appendChild(d);setTimeout(()=>d.remove(),1150)}
 /* sound */
@@ -456,7 +456,7 @@ function catchEmber(e,bx,by){
   for(let k=0;k<(d>0?14:8);k++)G.sparks.push({x:bx,y:by-20,vx:(Math.random()-.5)*220,vy:-Math.random()*260-40,life:1,c:d>0?"#ffc46b":"#7d8fa6"});
   hud();
   if(G.fire>=10)levelUp();else if(G.fire<=-10)gameOver()}
-function levelUp(){G.run=false;gSound("win");const p=P.find(x=>x.id===G.prompt);gEl("luK").textContent=`level ${G.level} cleared`;gEl("luH").textContent="Blaze";gEl("luP").textContent=`\u201c${p.aff}\u201d Next level: faster embers${G.level+1===3?", and the embers stop giving hints":G.level+1===4?", and the wind picks up":G.level+1===5?", and cold rain starts to fall (dodge it)":""}.`;gEl("gLevelUp").classList.remove("hide")}
+function levelUp(){G.run=false;gSound("win");const p=P.find(x=>x.id===G.prompt);gEl("luK").textContent=`level ${G.level} cleared`;gEl("luH").textContent="Blaze";gEl("luP").textContent=`\u201c${p.aff}\u201d Next level: a little faster${G.level+1===3?", and the embers stop giving hints":G.level+1===4?", and the wind picks up":G.level+1===5?", and cold rain starts to fall (dodge it)":""}.`;gEl("gLevelUp").classList.remove("hide")}
 function gameOver(){G.run=false;gSound("out");if(G.score>G.best){G.best=G.score;try{localStorage.setItem("hearth:best",String(Math.round(G.best)))}catch(e){}}
   gEl("goH").textContent=`Score ${Math.round(G.score)}`;gEl("goP").textContent=G.score>=G.best&&G.score>0?"New best. Every hearth has nights like this, and every fire can be rekindled.":"Every hearth has nights like this, and every fire can be rekindled.";
   const seen=new Set(),rows=G.caughtBad.filter(e=>!seen.has(e.w)&&seen.add(e.w)).slice(-8).map(e=>{const k=WORDS[e.theme].bad.indexOf(e.w),h=WORDS[e.theme].good[k]||WORDS[e.theme].good[0];return`<div><span class="w">${e.w}</span><span style="color:var(--dim)">\u2192</span><span class="h">${h}</span></div>`});
@@ -469,9 +469,9 @@ function gameFrame(){
   gEl("gBreathBar").style.width=(G.breath*100)+"%";gEl("breathBtn").classList.toggle("on",G.breathing);
   const ts=G.run?(G.breathing?.38:1):0,dt=DT*ts;
   if(G.run){G.ptime+=dt;gEl("gPbar").style.width=Math.max(0,100-G.ptime/G.plen*100)+"%";if(G.ptime>G.plen)newPrompt();
-    G.spawn-=dt;if(G.spawn<=0){spawnEmber();G.spawn=L.every*(.75+Math.random()*.5)}
+    G.el=(G.el||0)+dt;G.spawn-=dt;if(G.spawn<=0){if(G.embers.length<L.maxOn)spawnEmber();G.spawn=L.every*(.8+Math.random()*.4)}
     if(L.wind){G.windT-=dt;if(G.windT<=0){G.wind=(Math.random()-.5)*.5;G.windT=3+Math.random()*4}}else G.wind=0;
-    if(L.rain&&Math.random()<dt*(.5+G.level*.08))G.drops.push({x:Math.random(),y:-.02,v:H*.55})}
+    if(L.rain&&Math.random()<dt*(.15+(G.level-5)*.05+.1*Math.min(1,G.el/120)))G.drops.push({x:Math.random(),y:-.02,v:H*.55})}
   // background glow scaled by fire
   const f01=(G.fire+10)/20,px=G.px*W;
   g.save();g.globalAlpha=.25+.5*f01;const gr=Math.max(W,H)*.45*(.4+.8*f01);g.drawImage(GLOW,px-gr,by-gr*.8,gr*2,gr*2);g.restore();
@@ -502,7 +502,7 @@ function closeGame(){G.run=false;show("#game",false);level="map";zoomT=0;szT=0;s
 gEl("playBtn").onclick=openGame;gEl("gQuit").onclick=closeGame;gEl("goBack").onclick=closeGame;
 gEl("gGo").onclick=()=>{gEl("gStart").classList.add("hide");gameReset();G.run=true};
 gEl("goAgain").onclick=()=>{gEl("gOver").classList.add("hide");gameReset();G.run=true};
-gEl("luGo").onclick=()=>{gEl("gLevelUp").classList.add("hide");G.level++;G.fire=2;G.embers=[];G.drops=[];newPrompt();hud();G.run=true};
+gEl("luGo").onclick=()=>{gEl("gLevelUp").classList.add("hide");G.level++;G.fire=2;G.el=0;G.spawn=.5;G.embers=[];G.drops=[];newPrompt();hud();G.run=true};
 gEl("gSnd").onclick=()=>{G.sound=!G.sound;gEl("gSnd").setAttribute("aria-pressed",G.sound);gEl("gSnd").textContent=G.sound?"Game sound on":"Game sound off"};
 addEventListener("keydown",e=>{if(level!=="game")return;const k=e.key.length===1?e.key.toLowerCase():e.key;G.keys[k]=true;if(e.key===" "){e.preventDefault();G.breathing=true}if(["ArrowLeft","ArrowRight"].includes(e.key))e.preventDefault()});
 addEventListener("keyup",e=>{const k=e.key.length===1?e.key.toLowerCase():e.key;G.keys[k]=false;if(e.key===" ")G.breathing=false});
