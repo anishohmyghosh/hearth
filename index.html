@@ -104,14 +104,14 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
 }
 @media (prefers-reduced-motion:reduce){.ui{transition:opacity .2s!important;transform:none}}
 /* game */
-#game{inset:0;pointer-events:none}
+#game{inset:0;pointer-events:none;--glow:rgba(255,122,47,.75);--glow2:rgba(255,122,47,.4);--glowc:#ffc46b}
 #game>*{pointer-events:auto}
 #gTop{position:absolute;top:calc(56px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);width:min(560px,calc(100vw - 32px));text-align:center;pointer-events:none}
-#gPrompt{font-family:var(--f-d);font-size:clamp(26px,3.4vw,40px);line-height:1.05;color:var(--gold);transition:opacity .4s,transform .4s}
+#gPrompt{font-family:var(--f-d);font-size:clamp(26px,3.4vw,40px);line-height:1.05;color:#fffaf4;text-shadow:0 0 16px var(--glow),0 0 38px var(--glow2);transition:opacity .4s,transform .4s,text-shadow 1s}
 #gPrompt.flip{opacity:0;transform:translateY(-6px)}
 #gSub{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-top:4px}
 #gPtime{height:2px;margin:10px auto 0;width:60%;background:var(--faint);border-radius:2px;overflow:hidden}
-#gPtime i{display:block;height:100%;background:var(--gold);width:100%}
+#gPtime i{display:block;height:100%;background:var(--glowc);width:100%}
 #gHud{position:absolute;top:calc(56px + env(safe-area-inset-top,0px));left:max(18px,env(safe-area-inset-left,0px));display:grid;gap:4px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);pointer-events:none}
 #gHud b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.04em;font-size:15px}
 #gMeter{position:absolute;right:max(18px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);width:14px;height:min(46vh,340px);border-radius:10px;border:1px solid rgba(255,196,107,.3);background:rgba(255,255,255,.03);pointer-events:none}
@@ -123,14 +123,17 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
 #breathBtn{border:1px solid rgba(159,198,255,.45);color:var(--cool);border-radius:999px;padding:8px 14px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;touch-action:none;user-select:none;-webkit-user-select:none}
 #breathBtn.on{background:rgba(159,198,255,.15)}
 #gQuit{position:absolute;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(22px + env(safe-area-inset-bottom,0px))}
-#gBanner{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:min(560px,calc(100vw - 32px));text-align:center;pointer-events:none;opacity:0}
-#gBanner.show{animation:ban 2.6s cubic-bezier(.2,.8,.2,1) forwards}
-@keyframes ban{0%{opacity:0;transform:translate(-50%,-40%) scale(.92)}12%{opacity:1;transform:translate(-50%,-50%) scale(1)}78%{opacity:1;transform:translate(-50%,-52%)}100%{opacity:0;transform:translate(-50%,-60%)}}
-#gBanner .b1{font-family:var(--f-d);font-size:clamp(56px,10vw,104px);line-height:.95;color:var(--gold);text-shadow:0 0 30px rgba(255,122,47,.8),0 0 60px rgba(255,90,30,.5)}
-#gBanner .b2{font-size:13px;letter-spacing:.32em;text-transform:uppercase;color:var(--ink);margin-top:6px}
-#gBanner .b3{font-family:var(--f-d);font-style:italic;font-size:clamp(20px,2.6vw,28px);color:var(--ink);margin-top:14px;text-shadow:0 2px 14px rgba(0,0,0,.8)}
-#gBanner .b4{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:8px}
-@media (prefers-reduced-motion:reduce){#gBanner.show{animation:none;opacity:1}}
+#gBanner,#gCall{position:absolute;left:50%;transform:translate(-50%,-50%);width:min(560px,calc(100vw - 32px));text-align:center;pointer-events:none;opacity:0}
+#gBanner{top:36%}#gCall{top:60%}
+#gBanner.show{animation:ban 2.2s cubic-bezier(.2,.8,.2,1) forwards}#gCall.show{animation:ban 1.5s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes ban{0%{opacity:0;transform:translate(-50%,-40%) scale(.94)}14%{opacity:1;transform:translate(-50%,-50%) scale(1)}70%{opacity:1;transform:translate(-50%,-54%)}100%{opacity:0;transform:translate(-50%,-66%)}}
+#gBanner .b1{font-family:var(--f-d);font-size:clamp(40px,7vw,72px);line-height:.95;color:#fffaf4;text-shadow:0 0 22px var(--glow),0 0 54px var(--glow2)}
+#gBanner .b2{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);margin-top:8px;text-shadow:0 1px 10px rgba(0,0,0,.9)}
+#gBanner .b4{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:6px;text-shadow:0 1px 10px rgba(0,0,0,.9)}
+#gCall .c1{font-family:var(--f-d);font-size:clamp(26px,4vw,38px);color:#fffaf4;text-shadow:0 0 14px var(--glow),0 0 34px var(--glow2)}
+#gCall .c2{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);margin-top:2px;text-shadow:0 1px 10px rgba(0,0,0,.9)}
+#gCall.ward .c1{text-shadow:0 0 14px rgba(159,198,255,.8),0 0 34px rgba(159,198,255,.4)}
+@media (prefers-reduced-motion:reduce){#gBanner.show,#gCall.show{animation:none;opacity:1}}
 #gFloat{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .fw{position:absolute;transform:translate(-50%,-50%);font-family:var(--f-d);font-size:20px;white-space:nowrap;animation:fw 1.1s ease-out forwards}
 @keyframes fw{from{opacity:1;transform:translate(-50%,-50%)}to{opacity:0;transform:translate(-50%,-140%)}}
@@ -206,8 +209,8 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
 
 <section id="game" class="ui hide" aria-label="Tend the Fire game">
   <div id="gTop"><div id="gPrompt">Feeling</div><div id="gSub">catch what feeds it</div><div id="gPtime"><i id="gPbar"></i></div></div>
-  <div id="gHud"><div>Score <b id="gScore">0</b></div><div>Level <b id="gLevel">1</b></div><div>Combo <b id="gCombo">&#xd7;1</b></div><div>Best <b id="gBest">0</b></div></div>
-  <div id="gMeter" aria-hidden="true"><i id="gFill"></i><span style="top:2%">blaze +10</span><span style="top:34%">0</span><span style="top:98%">out &#x2212;5</span></div>
+  <div id="gHud"><div>Score <b id="gScore">0</b></div><div>Level <b id="gLevel">1</b></div><div>Streak <b id="gCombo">&#xd7;1</b></div><div>Best <b id="gBest">0</b></div></div>
+  <div id="gMeter" aria-hidden="true"><i id="gFill"></i><span style="top:2%">level +10</span><span style="top:34%">0</span><span style="top:98%">out &#x2212;5</span></div>
   <div id="gFloat"></div>
   <div id="gBreath"><button type="button" id="breathBtn">Hold &#xb7; Breathe</button><div class="bar"><i id="gBreathBar"></i></div></div>
   <button class="ghost" type="button" id="gQuit">End run</button>
@@ -219,16 +222,19 @@ h1,h2{font-family:var(--f-d);font-weight:400;margin:0;text-wrap:balance}
       <div><span>Read</span> &nbsp;healing words grow the fire, wounding words shrink it. Later embers all look the same, so read them.</div>
       <div><span>Prompt</span> &nbsp;words that match the theme at the top count double, both ways.</div>
       <div><span>Breathe</span> &nbsp;hold Space (or the button) to slow time. It drains, then refills. P pauses.</div>
-      <div><span>Win &#xb7; lose</span> &nbsp;reach +10 to blaze into the next level. At &#x2212;5 the fire goes out, so every wrong catch counts.</div>
+      <div><span>Streak</span> &nbsp;every 5 healing words in a row raises your multiplier. Every 10 in a row earns a <b>ward</b>.</div>
+      <div><span>Ward</span> &nbsp;a ward blocks the next wound word you catch and keeps your streak. Hold up to 3.</div>
+      <div><span>Level</span> &nbsp;reach +10 to level up: bonus points, a new ward, a new rank. At &#x2212;5 the fire goes out.</div>
     </div>
     <div class="row"><button class="fire-btn" type="button" id="gGo">Light it</button><button class="ghost" type="button" id="gScoresBtn">High scores</button><button class="ghost" type="button" id="gSnd" aria-pressed="true">Game sound on</button></div>
     <div class="plays" id="gPlays" hidden></div>
     <div id="gScoresView" hidden style="margin-top:14px"><div class="k" style="margin-bottom:8px">high scores</div><ol class="board" id="gBoardStart"></ol><div class="boardnote">Loading the shared leaderboard&#x2026;</div></div>
   </div></div>
   <div class="ov hide" id="gPause"><div class="box"><div class="k">paused</div><h2>Breathe</h2><p>The fire waits for you.</p><div class="row"><button class="fire-btn" type="button" id="gResume">Resume</button><button class="ghost" type="button" id="gPauseEnd">End run</button></div></div></div>
-  <div id="gBanner" aria-live="polite"><div class="b1">Blaze</div><div class="b2" id="gBan2"></div><div class="b3" id="gBan3"></div><div class="b4" id="gBan4"></div></div>
+  <div id="gBanner" aria-live="polite"><div class="b1" id="gBan1">Level 2</div><div class="b2" id="gBan2"></div><div class="b4" id="gBan4"></div></div>
+  <div id="gCall" aria-live="polite"><div class="c1" id="gCall1"></div><div class="c2" id="gCall2"></div></div>
   <div class="ov hide" id="gOver"><div class="box"><div class="k" id="goK">the fire went out</div><h2 id="goRank">Spark</h2><p id="goP"></p>
-  <div class="stats"><div><small>Score</small><b id="goScore">0</b></div><div><small>Level</small><b id="goLevel">1</b></div><div><small>Best combo</small><b id="goCombo">0</b></div><div><small>Caught</small><b id="goCaught">0</b></div></div>
+  <div class="stats"><div><small>Score</small><b id="goScore">0</b></div><div><small>Level</small><b id="goLevel">1</b></div><div><small>Best streak</small><b id="goCombo">0</b></div><div><small>Caught</small><b id="goCaught">0</b></div></div>
   <div class="namecard" id="gNameCard"><div class="nc-h" id="gNameH">Put your name on the board</div><form id="gNameForm" class="nameform"><input id="gNameIn" maxlength="10" placeholder="YOUR NAME" autocomplete="off" spellcheck="false" aria-label="Name for the leaderboard"><button class="fire-btn" id="gSave" type="submit">Save</button></form><div class="nc-s" id="gNameS">Up to 10 letters. Press Enter to save.</div></div>
   <div class="k" style="margin:14px 0 8px">high scores</div><ol class="board" id="gBoard"></ol><div class="boardnote">Loading the shared leaderboard&#x2026;</div>
   <div id="goFire"></div>
@@ -520,7 +526,7 @@ $("#endBtn").onclick=()=>{endSession();level="map";zoomT=0;show("#centre",true);
 /* ===== Tend the Fire ===== */
 const WORDS={"feel":{"good":["naming it","tears are ok","honesty","I'm hurting","feel it fully","say it aloud","grief","joy","I'm scared","vulnerability","open up","let it move","cry it out","journal it","I feel sad","being moved"],"bad":["bottle it up","man up","numb out","fake fine","swallow it","never cry","stone face","shut down","fake bravado","keep it hidden","clam up","stuff it down","boys don't cry","ignore it","I'm fine","feel nothing"]},"connect":{"good":["call a friend","ask for help","brotherhood","be known","reach out","show up","let them in","listen","check in","I need you","honest talk","team up","hug a friend","share the load","be there","ask how he is"],"bad":["go it alone","ghost them","need no one","wall up","hide it","lone wolf","isolate","push away","vanish","fine alone","surface talk","go it solo","keep distance","carry it alone","no-show","don't ask"]},"respect":{"good":["self-respect","grace","I'm learning","kind self-talk","enough","forgive myself","worthy","own it","progress","self-kindness","I'm proud","learn from it","it's okay","my own pace","I matter","second chance"],"bad":["self-hatred","not enough","I'm a failure","shame spiral","punish myself","worthless","hide mistakes","beat myself up","perfection","self-loathing","I'm pathetic","never forgive","unforgivable","compare myself","I'm a burden","one strike"]},"protect":{"good":["protect","courage","calm anger","boundaries","defend others","quiet power","restraint","shield","de-escalate","walk away","speak up","gentle power","honour","keep them safe","stand guard","make amends"],"bad":["lash out","rage","intimidate","punch walls","dominate","threaten","revenge","hurt back","escalate","start a fight","bully","smash it","humiliate","scare them","pick a fight","hold grudges"]},"steady":{"good":["breathe","presence","let go","trust","patience","ground","slow down","stillness","pause","accept it","I'm safe","flow","one step","steady hands","box breathing","go with it"],"bad":["control","white-knuckle","micromanage","clench","panic","grip tight","force it","overthink","rush","fight reality","on edge","catastrophize","all at once","shaky grip","hold breath","brace"]},"purpose":{"good":["purpose","craft","service","meaning","build","legacy","calling","mission","contribute","mentor","create","devotion","my why","long game","build others","make things"],"bad":["prove it","flex","clout","compare","outdo them","status","approval","show off","take credit","gatekeep","be envied","keeping up","followers","quick clout","one-upping","likes"]},"body":{"good":["rest","sleep","stretch","move","feel the body","nourish","play","sunlight","drink water","walk outside","eat well","dance","a nap","doctor visit","listen to body","phone down"],"bad":["ignore pain","no sleep","play hurt","armour up","numb it","burn out","skip meals","no breaks","skip water","sit all day","junk only","stay rigid","all-nighter","skip the doctor","push through","doomscroll"]},"whole":{"good":["tenderness","gentle","warmth","nurture","hug","soft heart","care","receive","kindness","empathy","compassion","say I love you","comfort","cuddle","tend","softness"],"bad":["too soft","toughen up","be hard","cold","no hugs","act tough","mask","guarded","heartless","not my problem","judgement","never say it","be a rock","ice cold","harden up","never soft"]}};
 const THEMES=Object.keys(WORDS);
-const G={on:false,run:false,fire:0,score:0,level:1,combo:0,best:0,px:.5,vx:0,embers:[],drops:[],sparks:[],prompt:"feel",ptime:0,plen:16,spawn:0,breath:1,breathing:false,wind:0,windT:0,keys:{},caughtBad:[],sound:true,shake:0};
+const G={fv:0,wards:0,run:false,fire:0,score:0,level:1,combo:0,best:0,px:.5,vx:0,embers:[],drops:[],sparks:[],prompt:"feel",ptime:0,plen:16,spawn:0,breath:1,breathing:false,wind:0,windT:0,keys:{},caughtBad:[],sound:true,shake:0};
 try{G.best=+localStorage.getItem("hearth:best")||0}catch(e){}
 const gEl=id=>document.getElementById(id);
 function lvl(){const n=G.level,r=Math.min(1,(G.el||0)/120);return{fall:66+10*(n-1)+34*r,every:Math.max(.7,1.65-.15*(n-1)-.6*r),maxOn:Math.min(8,4+Math.floor((n-1)*.8+r*2)),plen:Math.max(9,30-3*(n-1)-10*r),hint:n<=2?1-(n-1)*.5:0,wind:n>=4,rain:n>=5}}
@@ -528,8 +534,9 @@ function setPrompt(t){G.prompt=t;G.ptime=0;G.top0=0;G.plen=lvl().plen;const p=P.
 function newPrompt(){let t;do{t=THEMES[(Math.random()*THEMES.length)|0]}while(t===G.prompt&&THEMES.length>1);setPrompt(t)}
 function spawnEmber(){const L=lvl(),theme=Math.random()<.45?G.prompt:THEMES[(Math.random()*THEMES.length)|0],good=Math.random()<.55,pool=WORDS[theme][good?"good":"bad"],rec=G.recent||[],fresh=pool.filter(w=>!G.embers.some(e=>e.w===w)).map(w=>[rec.lastIndexOf(w),w]).sort((x,y)=>x[0]-y[0]),list=fresh.slice(0,Math.max(1,Math.ceil(fresh.length/3))).map(x=>x[1]),gold=Math.random()<.035;
   if(!G.top0)G.top0=(gEl("gTop").getBoundingClientRect().bottom+18)/H;const top0=G.top0;G.embers.push({age:0,x:.1+Math.random()*.8,y:top0,v:L.fall*(.8+Math.random()*.45),w:gold?"hearthstone":list[(Math.random()*list.length)|0],good:gold||good,theme,gold,ph:Math.random()*TAU,i:list.indexOf(list[0])});G.recent=(G.recent||[]).concat(G.embers[G.embers.length-1].w).slice(-60)}
-function gameReset(){Object.assign(G,{recent:[],stats:Object.fromEntries(THEMES.map(t=>[t,{fell:0,got:0,bad:0}])),heat:0,goodN:0,badN:0,bestCombo:0,el:0,fire:0,score:0,level:1,combo:0,embers:[],drops:[],sparks:[],spawn:.4,breath:1,wind:0,windT:0,caughtBad:[],shake:0,px:.5});newPrompt();hud()}
-function hud(){gEl("gScore").textContent=Math.round(G.score);gEl("gLevel").textContent=G.level;gEl("gCombo").textContent="\u00d7"+(1+Math.floor(G.combo/4));gEl("gBest").textContent=Math.round(G.best);gEl("gFill").style.height=`calc(${(G.fire+5)/15*100}% - 4px)`}
+function gameReset(){Object.assign(G,{fv:0,wards:0,pbHit:G.best<=0,recent:[],stats:Object.fromEntries(THEMES.map(t=>[t,{fell:0,got:0,bad:0}])),heat:0,goodN:0,badN:0,bestCombo:0,el:0,fire:0,score:0,level:1,combo:0,embers:[],drops:[],sparks:[],spawn:.4,breath:1,wind:0,windT:0,caughtBad:[],shake:0,px:.5});newPrompt();hud()}
+const mult=()=>1+Math.min(4,Math.floor(G.combo/5));
+function hud(){gEl("gScore").textContent=Math.round(G.score);gEl("gLevel").textContent=G.level;gEl("gCombo").textContent=G.combo+" \u00d7"+mult();gEl("gBest").textContent=Math.round(Math.max(G.best,G.score));gEl("gFill").style.height=`calc(${(G.fire+5)/15*100}% - 4px)`}
 function floatWord(txt,x,y,col){const d=document.createElement("div");d.className="fw";d.textContent=txt;d.style.left=x+"px";d.style.top=y+"px";d.style.color=col;gEl("gFloat").appendChild(d);setTimeout(()=>d.remove(),1150)}
 /* sound */
 let GA=null;function gSound(type,k=0){if(!G.sound)return;try{GA=GA||new (window.AudioContext||window.webkitAudioContext)();if(GA.state==='suspended')GA.resume();const t=GA.currentTime,o=GA.createOscillator(),gg=GA.createGain();o.connect(gg);gg.connect(GA.destination);
@@ -537,23 +544,34 @@ let GA=null;function gSound(type,k=0){if(!G.sound)return;try{GA=GA||new (window.
   else if(type==="bad"){o.type="sawtooth";o.frequency.setValueAtTime(140,t);o.frequency.exponentialRampToValueAtTime(55,t+.35);const f=GA.createBiquadFilter();f.type="lowpass";f.frequency.value=500;o.disconnect();o.connect(f);f.connect(gg);gg.gain.setValueAtTime(.16,t);gg.gain.exponentialRampToValueAtTime(.0001,t+.4);o.start(t);o.stop(t+.45)}
   else if(type==="win"){[0,4,7,12].forEach((s,i)=>{const oo=GA.createOscillator(),g2=GA.createGain();oo.type="triangle";oo.frequency.value=262*Math.pow(2,s/12);oo.connect(g2);g2.connect(GA.destination);g2.gain.setValueAtTime(.0001,t+i*.12);g2.gain.exponentialRampToValueAtTime(.16,t+i*.12+.02);g2.gain.exponentialRampToValueAtTime(.0001,t+i*.12+.6);oo.start(t+i*.12);oo.stop(t+i*.12+.65)})}
   else if(type==="out"){o.type="sine";o.frequency.setValueAtTime(220,t);o.frequency.exponentialRampToValueAtTime(40,t+1.2);gg.gain.setValueAtTime(.18,t);gg.gain.exponentialRampToValueAtTime(.0001,t+1.3);o.start(t);o.stop(t+1.35)}
+  else if(type==="ward"){o.type="sine";o.frequency.setValueAtTime(660,t);o.frequency.exponentialRampToValueAtTime(990,t+.18);gg.gain.setValueAtTime(.0001,t);gg.gain.exponentialRampToValueAtTime(.14,t+.02);gg.gain.exponentialRampToValueAtTime(.0001,t+.5);o.start(t);o.stop(t+.55)}
   else if(type==="drip"){o.type="sine";o.frequency.setValueAtTime(900,t);o.frequency.exponentialRampToValueAtTime(300,t+.12);gg.gain.setValueAtTime(.08,t);gg.gain.exponentialRampToValueAtTime(.0001,t+.15);o.start(t);o.stop(t+.18)}}catch(e){}}
+function callout(a,b,cls){gEl("gCall1").textContent=a;gEl("gCall2").textContent=b||"";const c=gEl("gCall");c.className="";void c.offsetWidth;c.className="show"+(cls?" "+cls:"")}
+function giveWard(){if(G.wards>=3)return false;G.wards++;return true}
 function catchEmber(e,bx,by){
-  const match=e.theme===G.prompt;let d;
+  const match=e.theme===G.prompt,c0=G.combo;let d,warded=false;
   if(e.gold){d=3;G.combo+=2}
   else if(e.good){d=match?2:1;G.combo++;G.goodN++;G.stats[e.theme].fell++;G.stats[e.theme].got++}
+  else if(G.wards>0){G.wards--;d=0;warded=true}
   else{d=match?-3:-2;G.combo=0;G.badN++;G.stats[e.theme].bad++;G.caughtBad.push(e);G.shake=.35}
   G.bestCombo=Math.max(G.bestCombo,G.combo);
-  G.fire=cl(G.fire+d,-5,10);const mult=1+Math.floor(G.combo/4);if(d>0)G.score+=d*10*mult;
-  floatWord((d>0?"+":"")+d+"  "+e.w,bx,by-40,d>0?"#ffc46b":"#8fb3d9");gSound(d>0?"good":"bad",G.combo);
-  for(let k=0;k<(d>0?14:8);k++)G.sparks.push({x:bx,y:by-20,vx:(Math.random()-.5)*220,vy:-Math.random()*260-40,life:1,c:d>0?"#ffc46b":"#7d8fa6"});
+  G.fire=cl(G.fire+d,-5,10);if(d>0)G.score+=d*10*mult();
+  if(warded){floatWord("warded  "+e.w,bx,by-40,"#9fc6ff");gSound("ward");callout("Warded",G.wards?`${G.wards} ward${G.wards>1?"s":""} left`:"no wards left","ward")}
+  else{floatWord((d>0?"+":"")+d+"  "+e.w,bx,by-40,d>0?"#ffc46b":"#8fb3d9");gSound(d>0?"good":"bad",G.combo)}
+  for(let k=0;k<(d>0?14:8);k++)G.sparks.push({x:bx,y:by-20,vx:(Math.random()-.5)*220,vy:-Math.random()*260-40,life:1,c:warded?"#9fc6ff":d>0?"#ffc46b":"#7d8fa6"});
+  if(d>0){const w=(e.gold||Math.floor(G.combo/10)>Math.floor(c0/10))&&giveWard(),st=Math.floor(G.combo/5)>Math.floor(c0/5);
+    if(w)gSound("ward");
+    if(st||w)callout(e.gold&&!st?"Hearthstone":`Streak ${G.combo}`,[st?`\u00d7${mult()} points`:"",w?"+1 ward":""].filter(Boolean).join(" \u00b7 "),w&&!st?"ward":"");
+    if(!G.pbHit&&G.score>G.best){G.pbHit=true;setTimeout(()=>{if(G.run)callout("New best","every point from here is a record")},st||w?1300:0)}}
   hud();
   if(G.fire>=10)levelUp();else if(G.fire<=-5)gameOver()}
-function levelUp(){G.run=false;G.levelling=true;gSound("win");const p=P.find(x=>x.id===G.prompt),nx=G.level+1;
+function levelUp(){const p0=G.level,nx=p0+1,bonus=100*p0;G.level=nx;G.fire=0;G.el=0;G.score+=bonus;const w=giveWard();gSound("win");
   for(let k=0;k<40;k++)G.sparks.push({x:G.px*W,y:H*.8,vx:(Math.random()-.5)*520,vy:-Math.random()*620-120,life:1.3,c:k%3?"#ffc46b":"#fff1d6"});
-  gEl("gBan2").textContent=`Level ${nx}`;gEl("gBan3").textContent=`\u201c${p.aff}\u201d`;gEl("gBan4").textContent=nx===3?"the embers stop giving hints":nx===4?"the wind picks up":nx===5?"cold rain starts to fall \u00b7 dodge it":"a little faster";
-  const b=gEl("gBanner");b.classList.remove("show");void b.offsetWidth;b.classList.add("show");
-  setTimeout(()=>{G.levelling=false;if(level!=="game")return;G.level=nx;G.fire=0;G.el=0;G.spawn=.6;G.embers=[];G.drops=[];newPrompt();hud();if(!G.paused&&gEl("gOver").classList.contains("hide"))G.run=true},2600)}
+  const rank=RANKS[Math.min(RANKS.length-1,nx-1)],newRank=rank!==RANKS[Math.min(RANKS.length-1,p0-1)];
+  gEl("gBan1").textContent=`Level ${nx}`;gEl("gBan2").textContent=[newRank?rank:"",`+${bonus}`,w?"+1 ward":""].filter(Boolean).join(" \u00b7 ");
+  gEl("gBan4").textContent=nx===3?"embers stop giving hints":nx===4?"the wind picks up":nx===5?"cold rain falls \u00b7 dodge it":"a little faster";
+  const b=gEl("gBanner");b.classList.remove("show");void b.offsetWidth;b.classList.add("show");gEl("gCall").className="";
+  G.drops=[];newPrompt();hud()}
 function drawFireChart(){const el=gEl("goFire"),st=G.stats||{},th=THEMES,n=th.length,R=96,c=130;
   const rate=t=>st[t]&&st[t].fell?st[t].got/st[t].fell:null,maxBad=Math.max(2,...th.map(t=>st[t]?st[t].bad:0));
   const any=th.some(t=>st[t]&&(st[t].fell||st[t].bad));if(!any){el.innerHTML="";return}
@@ -574,15 +592,16 @@ function drawFireChart(){const el=gEl("goFire"),st=G.stats||{},th=THEMES,n=th.le
 function gameOver(banked){G.run=false;gSound(banked?"win":"out");gEl("goK").textContent=banked?"you banked the fire":"the fire went out";if(G.score>G.best){G.best=G.score;try{localStorage.setItem("hearth:best",String(Math.round(G.best)))}catch(e){}}
   const rank=RANKS[Math.min(RANKS.length-1,G.level-1)];gEl("goRank").textContent=rank;
   gEl("goScore").textContent=Math.round(G.score);gEl("goLevel").textContent=G.level;gEl("goCombo").textContent=G.bestCombo;gEl("goCaught").textContent=G.goodN;
-  gEl("goP").textContent=(G.score>=G.best&&G.score>0?"New best. ":"")+"Every hearth has nights like this, and every fire can be rekindled.";
+  const nxR=G.level<RANKS.length?`Reach level ${G.level+1} to become ${RANKS[G.level]}.`:"You hold the highest rank.";gEl("goP").textContent=(G.score>=G.best&&G.score>0?"New best. ":"")+nxR+" Every fire can be rekindled.";
   lastEntry=null;const ok=G.score>0;gEl("gNameIn").disabled=!ok;gEl("gSave").disabled=!ok;gEl("gNameIn").value="";gEl("gNameForm").hidden=!ok;
   pullBoard();const place=allScores().filter(r=>r.score>Math.round(G.score)).length+1;gEl("gNameH").textContent=ok?(place<=10?`#${place} on the board. Put your name on it`:"Put your name on the board"):"No points this time";gEl("gNameS").textContent=ok?"Up to 10 letters. Press Enter to save.":"Catch a few healing words to make the board.";
   renderBoard(gEl("gBoard"));drawFireChart();gEl("gOver").querySelector(".box").scrollTop=0;setTimeout(()=>{if(ok)gEl("gNameIn").focus()},350);
   const seen=new Set(),rows=G.caughtBad.filter(e=>!seen.has(e.w)&&seen.add(e.w)).slice(-8).map(e=>{const k=WORDS[e.theme].bad.indexOf(e.w),h=WORDS[e.theme].good[k]||WORDS[e.theme].good[0];return`<div><span class="w">${e.w}</span><span style="color:var(--dim)">\u2192</span><span class="h">${h}</span></div>`});
   gEl("goRecap").innerHTML=rows.length?`<div class="k" style="margin-bottom:4px">what smothered it, and what heals it</div>${rows.join("")}`:"";gEl("gOver").classList.remove("hide");hud()}
 function gameFrame(){
-  const heatT=Math.min(HEAT.length-1,(G.level-1)+.85*cl(.6*cl((G.fire+5)/15)+.4*Math.min(1,(G.el||0)/90)));G.heat=(G.heat||0)+(heatT-(G.heat||0))*Math.min(1,DT*.25);TINT=heatTint(G.heat);
-  if(TINT.key!==G._tk){G._tk=TINT.key;gEl("gFill").style.background=`linear-gradient(0deg,${tc("#6b2a14")},${tc("#ff7a2f")} 55%,${tc("#ffd27a")})`;gEl("gPrompt").style.color=tc("#ffc46b");document.querySelector("#gBanner .b1").style.color=tc("#ffc46b")}
+  G.fv+=(G.fire-G.fv)*Math.min(1,DT*4);
+  const heatT=Math.min(HEAT.length-1,(G.level-1)+.85*cl(.6*cl((G.fv+5)/15)+.4*Math.min(1,(G.el||0)/90)));G.heat=(G.heat||0)+(heatT-(G.heat||0))*Math.min(1,DT*.25);TINT=heatTint(G.heat);
+  if(TINT.key!==G._tk){G._tk=TINT.key;gEl("gFill").style.background=`linear-gradient(0deg,${tc("#6b2a14")},${tc("#ff7a2f")} 55%,${tc("#ffd27a")})`;const gc=tc("#ff7a2f"),rgb=[1,3,5].map(i=>parseInt(gc.slice(i,i+2),16)).join(","),gs=gEl("game").style;gs.setProperty("--glow",`rgba(${rgb},.75)`);gs.setProperty("--glow2",`rgba(${rgb},.4)`);gs.setProperty("--glowc",tc("#ffc46b"))}
   const L=lvl(),bw=Math.max(110,Math.min(180,W*.13)),by=H-Math.max(70,H*.11)-(innerWidth<640?40:0);
   // input
   const dir=(G.keys.ArrowRight||G.keys.d?1:0)-(G.keys.ArrowLeft||G.keys.a?1:0);if(dir)G.px=cl(G.px+dir*DT*.95,.04,.96);
@@ -594,7 +613,7 @@ function gameFrame(){
     if(L.wind){G.windT-=dt;if(G.windT<=0){G.wind=(Math.random()-.5)*.5;G.windT=3+Math.random()*4}}else G.wind=0;
     if(L.rain&&Math.random()<dt*(.15+(G.level-5)*.05+.1*Math.min(1,G.el/120)))G.drops.push({x:Math.random(),y:-.02,v:H*.55})}
   // background glow scaled by fire
-  const f01=(G.fire+5)/15,px=G.px*W;
+  const f01=cl((G.fv+5)/15),px=G.px*W;
   g.save();g.globalAlpha=.25+.5*f01;const gr=Math.max(W,H)*.45*(.4+.8*f01);g.drawImage(glowImg(),px-gr,by-gr*.8,gr*2,gr*2);g.restore();
   // embers
   if(G._hint!==L.hint){G._hint=L.hint;G._cg=mixCol("#ff6a2a","#ff9a3c",L.hint*.9);G._cb=mixCol("#ff6a2a","#b9573a",L.hint*.9)}const cGood=G._cg,cBad=G._cb;const GI=GLOW;
@@ -612,8 +631,9 @@ function gameFrame(){
   g.restore();
   // brazier + fire
   const shake=G.shake>0?(Math.random()-.5)*10*G.shake:0;G.shake=Math.max(0,G.shake-DT);
-  const fr=lerp(14,Math.min(78,H*.09),f01)*(1+Math.min(.35,(G.level-1)*.05));if(G.fire>-5)flame(px+shake,by-6,fr,.25+.75*f01,G.breathing?.5:0,1);
+  const fr=lerp(14,Math.min(78,H*.09,W*.17),f01)*(1+Math.min(.35,(G.level-1)*.05));if(G.fire>-5)flame(px+shake,by-6,fr,.25+.75*f01,G.breathing?.5:0,1);
   g.save();g.strokeStyle="#8a5a3c";g.fillStyle="rgba(40,22,14,.9)";g.lineWidth=2;g.beginPath();g.moveTo(px-bw/2+shake,by+2);g.quadraticCurveTo(px+shake,by+44,px+bw/2+shake,by+2);g.closePath();g.fill();g.stroke();g.beginPath();g.moveTo(px-bw*.18+shake,by+30);g.lineTo(px-bw*.26+shake,by+52);g.moveTo(px+bw*.18+shake,by+30);g.lineTo(px+bw*.26+shake,by+52);g.stroke();g.restore();
+  if(G.wards){g.save();g.globalCompositeOperation="lighter";for(let k=0;k<G.wards;k++){const wx=px+shake+(k-(G.wards-1)/2)*18,wy=by+20,r=4.5+Math.sin(T*3+k)*.6;g.globalAlpha=.3;g.drawImage(GLOW,wx-14,wy-14,28,28);g.globalAlpha=1;g.fillStyle="#cfe2ff";g.beginPath();g.moveTo(wx,wy-r);g.lineTo(wx+r*.7,wy);g.lineTo(wx,wy+r);g.lineTo(wx-r*.7,wy);g.closePath();g.fill()}g.restore()}
   if(TINT.iri>.02){g.save();g.globalCompositeOperation="lighter";for(let k=0;k<22;k++){const t=(T*.45+k*.137)%1,a2=k*2.399+T*.6,rr=fr*(1.2+1.6*t);const x=px+Math.cos(a2)*rr*.7,y=by-6-fr*.4-t*fr*2.6+Math.sin(a2)*rr*.25;g.globalAlpha=TINT.iri*(1-t)*.9;g.fillStyle=hslHex(hsh(k*31)*360+T*2.5,1,.7);g.beginPath();g.arc(x,y,1.2+1.6*(1-t),0,TAU);g.fill()}g.restore()}
   // sparks
   g.save();g.globalCompositeOperation="lighter";for(let i=G.sparks.length-1;i>=0;i--){const s=G.sparks[i];s.life-=DT*1.3;if(s.life<=0){G.sparks.splice(i,1);continue}s.vy+=420*DT;s.x+=s.vx*DT;s.y+=s.vy*DT;g.globalAlpha=s.life;g.fillStyle=s.c==="#7d8fa6"?s.c:tc(s.c);g.fillRect(s.x-1.5,s.y-1.5,3,3)}g.restore();
@@ -649,14 +669,14 @@ const COUNTER="https://abacus.jasoncameron.dev/%s/anishohmyghosh-hearth/plays";
 function showPlays(v){if(typeof v!=="number")return;gEl("gPlays").textContent=v.toLocaleString()+(v===1?" fire tended":" fires tended")+" so far";gEl("gPlays").hidden=false}
 function countPlay(){try{fetch(COUNTER.replace("%s","hit")).then(r=>r.json()).then(d=>showPlays(d.value)).catch(()=>{})}catch(e){}}
 try{fetch(COUNTER.replace("%s","get")).then(r=>r.json()).then(d=>showPlays(d.value)).catch(()=>{})}catch(e){}
-function openGame(){pullBoard();level="game";show("#centre",false);show("#begin",false);show("#pair",false);show("#game",true);$("#mapBtn").classList.remove("hide");gEl("gStart").classList.remove("hide");gEl("gOver").classList.add("hide");gEl("gBanner").classList.remove("show");G.levelling=false;gameReset();G.run=false}
+function openGame(){pullBoard();level="game";show("#centre",false);show("#begin",false);show("#pair",false);show("#game",true);$("#mapBtn").classList.remove("hide");gEl("gStart").classList.remove("hide");gEl("gOver").classList.add("hide");gEl("gBanner").classList.remove("show");gEl("gCall").className="";gameReset();G.run=false}
 function closeGame(){G.run=false;show("#game",false);level="map";zoomT=0;szT=0;show("#centre",true);show("#begin",true);$("#mapBtn").classList.add("hide");resetCentre()}
 gEl("playBtn").onclick=openGame;gEl("gQuit").onclick=()=>{if(G.run&&G.score>0){gameOver(true)}else closeGame()};gEl("goBack").onclick=closeGame;
 gEl("gGo").onclick=()=>{gEl("gStart").classList.add("hide");gameReset();G.run=true;countPlay()};
 gEl("goAgain").onclick=()=>{gEl("gOver").classList.add("hide");gameReset();G.run=true;countPlay()};
 
-function pauseGame(){if(level!=="game"||(!G.run&&!G.levelling)||G.paused)return;G.run=false;G.paused=true;G.breathing=false;gEl("gPause").classList.remove("hide")}
-function resumeGame(){if(!G.paused)return;G.paused=false;gEl("gPause").classList.add("hide");if(!G.levelling)G.run=true}
+function pauseGame(){if(level!=="game"||!G.run||G.paused)return;G.run=false;G.paused=true;G.breathing=false;gEl("gPause").classList.remove("hide")}
+function resumeGame(){if(!G.paused)return;G.paused=false;gEl("gPause").classList.add("hide");G.run=true}
 gEl("gResume").onclick=resumeGame;gEl("gPauseEnd").onclick=()=>{G.paused=false;gEl("gPause").classList.add("hide");if(G.score>0)gameOver(true);else closeGame()};
 document.addEventListener("visibilitychange",()=>{if(document.hidden){pauseGame();try{GA&&GA.suspend()}catch(e){}try{AC&&AC.suspend()}catch(e){}}else{try{AC&&AC.resume()}catch(e){}}});
 addEventListener("blur",pauseGame);
