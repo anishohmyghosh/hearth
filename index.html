@@ -614,7 +614,7 @@ function gameFrame(){
     if(L.rain&&Math.random()<dt*(.15+(G.level-5)*.05+.1*Math.min(1,G.el/120)))G.drops.push({x:Math.random(),y:-.02,v:H*.55})}
   // background glow scaled by fire
   const f01=cl((G.fv+5)/15),px=G.px*W;
-  g.save();g.globalAlpha=.15+.55*f01;const gr=Math.max(W,H)*.42;g.drawImage(glowImg(),px-gr,by-gr*.8,gr*2,gr*2);g.restore();
+  g.save();g.globalAlpha=.25+.5*f01;const gr=Math.max(W,H)*.45*(.4+.8*f01);g.drawImage(glowImg(),px-gr,by-gr*.8,gr*2,gr*2);g.restore();
   // embers
   if(G._hint!==L.hint){G._hint=L.hint;G._cg=mixCol("#ff6a2a","#ff9a3c",L.hint*.9);G._cb=mixCol("#ff6a2a","#b9573a",L.hint*.9)}const cGood=G._cg,cBad=G._cb;const GI=GLOW;
   g.save();g.textAlign="center";g.textBaseline="middle";
@@ -631,8 +631,7 @@ function gameFrame(){
   g.restore();
   // brazier + fire
   const shake=G.shake>0?(Math.random()-.5)*10*G.shake:0;G.shake=Math.max(0,G.shake-DT);
-  /* the bowl never changes; the flame grows taller inside it, never wider than the rim */
-  const fr=lerp(8,Math.min(80,H*.095),f01),fx=Math.min(1,bw*.34/(fr*.7));if(G.fire>-5){g.save();g.translate(px+shake,0);g.scale(fx,1);flame(0,by-6,fr,.25+.75*f01,G.breathing?.5:0,1,false,false);g.restore()}
+  const fr=lerp(14,Math.min(78,H*.09),f01)*(1+Math.min(.35,(G.level-1)*.05));if(G.fire>-5)flame(px+shake,by-6,fr,.25+.75*f01,G.breathing?.5:0,1,false,false);
   g.save();g.strokeStyle="#8a5a3c";g.fillStyle="rgba(40,22,14,.9)";g.lineWidth=2;g.beginPath();g.moveTo(px-bw/2+shake,by+2);g.quadraticCurveTo(px+shake,by+44,px+bw/2+shake,by+2);g.closePath();g.fill();g.stroke();g.beginPath();g.moveTo(px-bw*.18+shake,by+30);g.lineTo(px-bw*.26+shake,by+52);g.moveTo(px+bw*.18+shake,by+30);g.lineTo(px+bw*.26+shake,by+52);g.stroke();g.restore();
   if(G.wards){g.save();g.globalCompositeOperation="lighter";for(let k=0;k<G.wards;k++){const wx=px+shake+(k-(G.wards-1)/2)*18,wy=by+20,r=4.5+Math.sin(T*3+k)*.6;g.globalAlpha=.3;g.drawImage(GLOW,wx-14,wy-14,28,28);g.globalAlpha=1;g.fillStyle="#cfe2ff";g.beginPath();g.moveTo(wx,wy-r);g.lineTo(wx+r*.7,wy);g.lineTo(wx,wy+r);g.lineTo(wx-r*.7,wy);g.closePath();g.fill()}g.restore()}
   if(TINT.iri>.02){g.save();g.globalCompositeOperation="lighter";for(let k=0;k<22;k++){const t=(T*.45+k*.137)%1,a2=k*2.399+T*.6,rr=fr*(1.2+1.6*t);const x=px+Math.cos(a2)*rr*.7,y=by-6-fr*.4-t*fr*2.6+Math.sin(a2)*rr*.25;g.globalAlpha=TINT.iri*(1-t)*.9;g.fillStyle=hslHex(hsh(k*31)*360+T*2.5,1,.7);g.beginPath();g.arc(x,y,1.2+1.6*(1-t),0,TAU);g.fill()}g.restore()}
