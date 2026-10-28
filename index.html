@@ -332,7 +332,8 @@ const BREATH=11;
 
 /* ===== canvas ===== */
 const cv=document.getElementById("cv"),g=cv.getContext("2d");
-let W=0,H=0,DPR=1,T=0,last=performance.now(),DPRMAX=Math.min(matchMedia("(pointer: coarse)").matches?1.5:1.75,devicePixelRatio||1),ema=1/60,slowFor=0;
+let W=0,H=0,DPR=1,T=0,last=performance.now(),DPRMAX=Math.min(matchMedia("(pointer: coarse)").matches?1.5:1.75,devicePixelRatio||1),ema=1/60,slowFor=0,DPR0=devicePixelRatio||1;
+function setDPR(){DPR0=devicePixelRatio||1;DPRMAX=Math.min(matchMedia("(pointer: coarse)").matches?1.5:1.75,DPR0)}
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 function placeCentre(){const R=Math.min(innerWidth*.38,(innerHeight-260)*.44),c=document.getElementById('centre');if(c){c.style.top=(innerHeight/2-24+Math.min(R*.16,56)*.9+14)+'px'}}
 function resize(){DPR=DPRMAX;W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR}
@@ -428,6 +429,7 @@ function nodes(){const{cx,cy,R,Ry}=ringGeom();return P.map((_,i)=>{const a=-Math
 let DT=1/60;
 function frame(now){
   if(now-last<15.5){requestAnimationFrame(frame);return} /* cap at ~60fps on 120Hz screens */
+  if(innerWidth!==W||innerHeight!==H||(devicePixelRatio>1)!==(DPR0>1)){if((devicePixelRatio>1)!==(DPR0>1))setDPR();resize();measure();if(typeof G!=="undefined")G.top0=0} /* catch any resize the event missed (iframes, monitor moves) */
   const raw=(now-last)/1000;DT=Math.min(.05,raw)*(reduce?.4:1);last=now;T+=DT;
   if(raw<.5){ema+=(raw-ema)*.05;if(ema>1/42){slowFor+=raw;if(slowFor>1.5&&DPRMAX>1){DPRMAX=Math.max(1,DPRMAX-.25);resize();slowFor=0;ema=1/60}}else slowFor=0}
   zoom+=(zoomT-zoom)*Math.min(1,DT*3.4);sz+=(szT-sz)*Math.min(1,DT*2.2);
